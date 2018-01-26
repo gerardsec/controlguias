@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en-US" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="layout :: site-head">
+    <meta charset="utf-8"></meta>
+    <meta http-equiv="Content-Type" content="text/html"></meta>
+    <title>Agrega tipo de guía2</title>
+</head>
+<body>
+<header th:replace="layout :: site-header"/>
+<div th:replace="layout :: lista-guias" >
+    Lista de guías
+</div>
+<div class="container">
+    <h1>Agrega tipo de guía al catálogo</h1>
+    <form action="#" th:action="@{/guia/addTipoGuia}" th:object="${tipoGuiaE}" method="post">
+        <input type="text" th:field="${tipoGuiaE.tipoGuia}" placeholder="Tipo de guía (número entero)"
+               th:class="${#fields.hasErrors('tipoGuia')}? fieldError"/>
+        <li th:errors="${tipoGuiaE.tipoGuia}">error</li>
+        <br/>
+        <input type="text" th:field="${tipoGuiaE.nombreGuia}" placeholder="Nombre de la guía"/>
+        <li th:errors="${tipoGuiaE.nombreGuia}">error</li>
+        <br/>
+        <input type="text" th:field="${tipoGuiaE.imagenPortada}" placeholder="Imagen de la portada"/>
+        <li th:errors="${tipoGuiaE.imagenPortada}">error</li>
+        <br/>
+        <input type="text" th:field="${tipoGuiaE.isbn}" placeholder="ISBN"/>
+        <br/>
+        <input type="text" th:field="${tipoGuiaE.caracteristicas}" placeholder="Características generales"/>
+
+
+        <!--     <p th:text="${#date.format(*{created},'yyyy-MM-dd')}"></p>  -->
+        <input type="submit" value="Agregar"/>
+    </form>
+</div>
+<footer th:replace="layout :: site-footer"/>
+</body>
+</html>

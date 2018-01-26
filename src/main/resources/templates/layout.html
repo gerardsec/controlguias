@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="site-head">
+    <meta charset="utf-8"></meta>
+    <meta http-equiv="Content-Type" content="text/html"></meta>
+    <link rel="stylesheet" href="../static/css/styles.css" th:href="@{/css/styles.css}"/>
+    <link rel="icon" href="../static/images/favicon.ico" th:href="@{/images/favicon.ico}"/>
+    <!--<script src="../static/js/jquery-3.1.0.min.js" th:src="@{/js/jquery-3.1.0.min.js}"></script>
+    <script src="../static/js/blog-scripts.js" th:src="@{/js/blog-scripts.js}"></script> -->
+    <!-- <meta th:include="this :: head" th:remove="tag"/> -->
+</head>
+<body>
+<header th:fragment="site-header">
+    <a href="index.html" th:href="@{/index}"><img src="../static/images/site-logo.png" th:src="@{/images/site-logo.png}"/></a>
+    <a href="index.html" th:href="@{/index}">Inicio</a>
+    <a href="users/login.html" th:href="@{/users/login}">Login</a>
+    <a href="users/register.html" th:href="@{/users/register}">Register</a>
+    <a href="posts/index.html" th:href="@{/posts}">Posts</a>
+    <a href="guia/addTipoGuia.html" th:href="@{/guia/addTipoGuia}">Nuevo tipo de guía</a>
+    <a href="users/index.html" th:href="@{/users}">Users</a>
+    <div id="logged-in-info"><span>Hola, <b>(user)</b></span>
+        <form method="post" th:action="@{/users/logout}">
+            <input type="submit" value="Logout"/>
+        </form>
+    </div>
+</header>
+<div class="listaGuias" th:fragment="lista-guias">
+    <h1>Catálogo de tipos de guía</h1>
+    <table>
+        <tr>
+            <th>Tipo</th>
+            <th>Nombre</th>
+            <th>Imagen</th>
+            <th>ISBN</th>
+            <th>Descripción</th>
+        </tr>
+        <tr th:each="listaGuias : ${todosTiposGuia}">
+            <td th:text="${listaGuias.tipoGuia}">tipo</td>
+            <td th:text="${listaGuias.nombreGuia}">nombre</td>
+            <td th:text="${listaGuias.imagenPortada}">imagen</td>
+            <td th:text="${listaGuias.isbn}">isbn</td>
+            <td th:text="${listaGuias.caracteristicas}">Características</td>
+
+            <td><a href="edita.html" th:href="@{/guias/editar/{idEditar}/(idEditar=${listaGuias.tipoGuia})}">Editar</a>
+            </td>
+            <td><a href="edita.html"
+                   th:href="@{/guias/elimina/{idEliminar}/(idEliminar=${listaGuias.tipoGuia})}">Borrar</a></td>
+        </tr>
+    </table>
+</div>
+<h1>Bienvenido</h1>
+<p>Sistema de control de guías de estudio.</p>
+<footer th:fragment="site-footer">
+    &copy; UAM Departamento de Admisión, 2018
+</footer>
+</body>
+</html>
