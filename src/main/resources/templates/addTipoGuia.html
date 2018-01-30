@@ -13,8 +13,8 @@
 <div class="container">
     <h1>Agrega tipo de guía al catálogo</h1>
     <form action="#" th:action="@{/guia/addTipoGuia}" th:object="${tipoGuiaE}" method="post">
-        <input type="text" th:field="${tipoGuiaE.tipoGuia}" placeholder="Tipo de guía (número entero)"
-               th:class="${#fields.hasErrors('tipoGuia')}? fieldError"/>
+        <input type="text" th:field="${tipoGuiaE.tipoGuia}" placeholder="Tipo de guía (número entero)"/>
+        <p th:if="${#fields.hasErrors('tipoGuia')}" th:errors="*{tipoGuia}">Clave incorrecta</p>
         <li th:errors="${tipoGuiaE.tipoGuia}">error</li>
         <br/>
         <input type="text" th:field="${tipoGuiaE.nombreGuia}" placeholder="Nombre de la guía"/>

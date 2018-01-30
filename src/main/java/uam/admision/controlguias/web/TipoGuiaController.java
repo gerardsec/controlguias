@@ -5,11 +5,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
@@ -17,11 +19,14 @@ import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 import uam.admision.controlguias.domain.TipoguiaEntity;
+import uam.admision.controlguias.service.NotificationService;
 import uam.admision.controlguias.service.TipoguiaService;
+
 
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class TipoGuiaController {
@@ -31,13 +36,17 @@ public class TipoGuiaController {
     /*@Autowired
     private TipoguiaRepository repo;*/
 
-     @Autowired
+    @Autowired
     private TipoguiaService repo;
 
-   @Bean
-   public LayoutDialect layoutDialect(){
-       return new LayoutDialect();
-   }
+
+    @Autowired
+    private NotificationService notifyService;
+
+    @Bean
+    public LayoutDialect layoutDialect() {
+        return new LayoutDialect();
+    }
 
     private TemplateEngine templateEngine(ITemplateResolver templateResolver) {
         SpringTemplateEngine engine = new SpringTemplateEngine();
@@ -53,22 +62,37 @@ public class TipoGuiaController {
     }
 
     @GetMapping(value = "/guia/addTipoGuia")
-    public ModelAndView addTipoGuia(ModelAndView model) {
+    //public ModelAndView addTipoGuia(ModelAndView model) {
+    public ModelAndView addTipoGuia(ModelMap model) {
         TipoguiaEntity tipoGuiaInicial = new TipoguiaEntity();
-        model.addObject("tipoGuiaE", tipoGuiaInicial);
-        model.setViewName("addTipoGuia");
+
+        ModelAndView modelAndView = new ModelAndView();
+        if (model.isEmpty()) {
+            logger.warn("modelo vacío ....");
+
+            modelAndView.addObject("tipoGuiaE", tipoGuiaInicial);
+
+        }
 
         List<TipoguiaEntity> todosTiposGuia = repo.listaTodo();
-        model.addObject("todosTiposGuia", todosTiposGuia);
-        return model;
+        modelAndView.addObject("todosTiposGuia", todosTiposGuia);
+        modelAndView.setViewName("addTipoGuia");
+        return modelAndView;
     }
 
     @PostMapping(value = "/guia/addTipoGuia")
-    public ModelAndView addTipoGuia(@Valid TipoguiaEntity tipoGuiaE, BindingResult result) {
+    public ModelAndView addTipoGuia(@Valid TipoguiaEntity tipoGuiaE, BindingResult result,
+                                    RedirectAttributes redirectAttributes) {
         ModelAndView formaAlta = new ModelAndView();
         //TipoguiaEntity tipoGuiaE = new TipoguiaEntity();
+
         if (result.hasErrors()) {
+            //notifyService.addErrorMessage("Errores en la forma de alta de libros");
             logger.warn("Errores en la forma de alta de libros");
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.tipoGuiaE", result);
+            redirectAttributes.addFlashAttribute("tipoGuiaE", tipoGuiaE);
+
+            return new ModelAndView("redirect:/guia/addTipoGuia");
 
         } else {
             System.out.print("datos recibidos .....iniciando");
@@ -86,9 +110,9 @@ public class TipoGuiaController {
 
         List<TipoguiaEntity> todosTiposGuia = repo.listaTodo();
         formaAlta.addObject("todosTiposGuia", todosTiposGuia);
-
+        TipoguiaEntity tipoGuiaInicial = new TipoguiaEntity();
         formaAlta.setViewName("addTipoGuia");
-        formaAlta.addObject("tipoGuiaE", tipoGuiaE);
+        formaAlta.addObject("tipoGuiaE", tipoGuiaInicial);
         return formaAlta;
     }
 

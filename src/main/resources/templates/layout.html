@@ -11,18 +11,34 @@
 </head>
 <body>
 <header th:fragment="site-header">
-    <a href="index.html" th:href="@{/index}"><img src="../static/images/site-logo.png" th:src="@{/images/site-logo.png}"/></a>
-    <a href="index.html" th:href="@{/index}">Inicio</a>
-    <a href="users/login.html" th:href="@{/users/login}">Login</a>
-    <a href="users/register.html" th:href="@{/users/register}">Register</a>
-    <a href="posts/index.html" th:href="@{/posts}">Posts</a>
-    <a href="guia/addTipoGuia.html" th:href="@{/guia/addTipoGuia}">Nuevo tipo de guía</a>
-    <a href="users/index.html" th:href="@{/users}">Users</a>
-    <div id="logged-in-info"><span>Hola, <b>(user)</b></span>
-        <form method="post" th:action="@{/users/logout}">
-            <input type="submit" value="Logout"/>
-        </form>
-    </div>
+    <header>
+        <a href="index.html" th:href="@{/index}"><img src="../static/images/site-logo.png"
+                                                      th:src="@{/images/site-logo.png}"/></a>
+        <a href="index.html" th:href="@{/index}">Inicio</a>
+        <a href="users/login.html" th:href="@{/users/login}">Login</a>
+        <a href="users/register.html" th:href="@{/users/register}">Register</a>
+        <a href="posts/index.html" th:href="@{/posts}">Posts</a>
+        <a href="guia/addTipoGuia.html" th:href="@{/guia/addTipoGuia}">Nuevo tipo de guía</a>
+        <a href="users/index.html" th:href="@{/users}">Users</a>
+        <div id="logged-in-info"><span>Hola, <b>(user)</b></span>
+            <form method="post" th:action="@{/users/logout}">
+                <input type="submit" value="Logout"/>
+            </form>
+        </div>
+    </header>
+
+    <!-- /* Agrega el sistema de mensajes en esta parte */
+    <ul id="messages" th:with="notifyMessages=${session[T(uam.admision.controlguias.service.NotificationServiceImpl).NOTIFY_MSG_SESSION_KEY]}">
+        <li th:each="msg : ${notifyMessages}" th:text="${msg.text}"
+            th:class="${#strings.toLowerCase(msg.type)}">
+        </li>
+         <span th:if="${notifyMessages}" th:remove="all" th:text="${session.remove(
+
+          T(uam.admision.controlguias.service.NotificationServiceImpl).NOTIFY_MSG_SESSION_KEY)}"></span> -->
+
+    </ul>
+
+
 </header>
 <div class="listaGuias" th:fragment="lista-guias">
     <h1>Catálogo de tipos de guía</h1>
