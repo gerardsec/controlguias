@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uam.admision.controlguias.domain.TipoguiaEntity;
 import uam.admision.controlguias.repository.TipoguiaRepository;
@@ -35,7 +36,7 @@ public class TipoguiaService {
     }
 
     public List<TipoguiaEntity> listaTodo(){
-        return repo.findAll();
+        return repo.findAll(new Sort(Sort.Direction.ASC,"tipoGuia"));
     }
     public List<TipoguiaEntity> queryagusto(String word){
         return repo.findByCustomQuery(word);

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en-US" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="layout :: site-head">
+    <meta charset="utf-8"></meta>
+    <meta http-equiv="Content-Type" content="text/html"></meta>
+    <title>Agrega Inventario</title>
+</head>
+<body>
+<header th:replace="layout :: site-header"/>
+<div th:replace="layout :: lista-guias">
+    Lista de guías
+</div>
+<!-- form de PRUEBA -->
+<form action="#" th:action="@{/inventario/addInventario}" th:object="${inventarioE}" method="post">
+    <select th:field="${inventarioE.tipoGuia}">
+        <option th:each="tipoGuiaG : ${todosTiposGuia}"
+                th:value="${tipoGuiaG.tipoGuia}"
+                th:text="${tipoGuiaG.tipoGuia + '-'+ tipoGuiaG.nombreGuia}">opcion
+        </option>
+    </select>
+    <input type="submit" value="Agregar"/>
+</form>
+
+<div class="container">
+    <h1>Agrega Inventario</h1>
+    <form action="#" th:action="@{/inventario/addInventario}" th:object="${inventarioE}" method="post">
+        <table>
+            <tr>
+                <td>
+                    <input type="text" th:field="${inventarioE.claveEntrada}" placeholder="Clave de entrada"/>
+                </td>
+                <td>
+                    <p th:if="${#fields.hasErrors('claveEntrada')}" th:errors="*{claveEntrada}">Clave incorrecta</p>
+                </td>
+            </tr>
+            <tr>
+                <!-- <td>
+                    <input type="text" th:field="${inventarioE.tipoGuia}" placeholder="Tipo de guía"/>
+
+                </td> -->
+                <td>
+                <select th:field="${inventarioE.tipoGuia}">
+                    <option th:each="tipoGuiaG : ${todosTiposGuia}"
+                            th:value="${tipoGuiaG.tipoGuia}"
+                            th:text="${tipoGuiaG.tipoGuia + '-'+ tipoGuiaG.nombreGuia}">opcion
+                    </option>
+                </select>
+                </td>
+                <td>
+                    <p th:if="${#fields.hasErrors('tipoGuia')}" th:errors="*{tipoGuia}">Clave incorrecta</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" th:field="${inventarioE.cantidadInicial}" placeholder="Cantidad inicial"/>
+                </td>
+                <td>
+                    <p th:if="${#fields.hasErrors('cantidadInicial')}" th:errors="*{cantidadInicial}">Cantidad
+                        inicial</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" th:field="${inventarioE.cantidadDisponible}" placeholder="Cantidad disponible"/>
+                </td>
+                <td>
+                    <p th:if="${#fields.hasErrors('cantidadDisponible')}" th:errors="*{cantidadDisponible}">Cantidad
+                        disponible</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="date" th:field="${inventarioE.fechaEntrada}" placeholder="Fecha de entrada"/>
+                </td>
+                <td>
+                    <p th:if="${#fields.hasErrors('fechaEntrada')}" th:errors="*{fechaEntrada}">Fecha de entrada</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" th:field="${inventarioE.pedidoCompra}" placeholder="Pedido/Compra"/>
+                </td>
+                <td>
+                    <p th:if="${#fields.hasErrors('pedidoCompra')}" th:errors="*{pedidoCompra}">Pedido/Compra</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" th:field="${inventarioE.edicion}" placeholder="Edición"/>
+                </td>
+                <td>
+                    <p th:if="${#fields.hasErrors('edicion')}" th:errors="*{edicion}">Edición</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" th:field="${inventarioE.observaciones}" placeholder="Observaciones"/>
+
+                </td>
+                <td>
+                    <p th:if="${#fields.hasErrors('observaciones')}" th:errors="*{observaciones}">Observaciones</p>
+                </td>
+            </tr>
+        </table>
+        <!--     <p th:text="${#date.format(*{created},'yyyy-MM-dd')}"></p>  -->
+        <input type="submit" value="Agregar"/>
+    </form>
+</div>
+<footer th:replace="layout :: site-footer"/>
+</body>
+</html>

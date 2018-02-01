@@ -1,7 +1,9 @@
 package uam.admision.controlguias.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
@@ -26,6 +28,7 @@ public class TipoguiaEntity {
 
     @Basic
     @NotNull
+    @Size(min=1, max=60)
     @Column(name = "nombre_guia", nullable = false, length = 60)
     public String getNombreGuia() {
         return nombreGuia;
@@ -36,6 +39,7 @@ public class TipoguiaEntity {
     }
 
     @Basic
+    @Size(max=20)
     @Column(name = "imagen_portada", nullable = true, length = 40)
     public String getImagenPortada() {
         return imagenPortada;
@@ -47,6 +51,7 @@ public class TipoguiaEntity {
 
     @Basic
     @NotNull
+    @Size(min=8, max=20)
     @Column(name = "isbn", nullable = false, length = 20)
     public String getIsbn() {
         return isbn;

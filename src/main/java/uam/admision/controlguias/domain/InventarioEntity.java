@@ -1,20 +1,56 @@
 package uam.admision.controlguias.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.springframework.format.annotation.DateTimeFormat;
+import uam.admision.controlguias.utils.JsonDateSerializer;
+import uam.admision.controlguias.utils.LocalDateTimeConverter;
+
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Entity
 @Table(name = "inventario", schema = "public", catalog = "controlguias")
 public class InventarioEntity {
+
     private Integer id;
     private String claveEntrada;
+    private Integer tipoGuia;
     private Integer cantidadInicial;
     private Integer cantidadDisponible;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fechaEntrada;
     private Integer pedidoCompra;
     private Integer edicion;
     private String observaciones;
+
+    @Transient
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    public InventarioEntity(Integer id, String claveEntrada, Integer tipoGuia, Integer cantidadInicial,
+                            Integer cantidadDisponible, String fechaEntradaST, Integer pedidoCompra,
+                            Integer edicion, String observaciones) throws ParseException {
+        this.id = id;
+        this.claveEntrada = claveEntrada;
+        this.tipoGuia = tipoGuia;
+        this.cantidadInicial = cantidadInicial;
+        this.cantidadDisponible = cantidadDisponible;
+
+        this.fechaEntrada = LocalDate.parse(fechaEntradaST, formatter);
+        this.pedidoCompra = pedidoCompra;
+        this.edicion = edicion;
+        this.observaciones = observaciones;
+
+    }
+
+    public InventarioEntity() {
+    }
 
     @Id
     @Column(name = "id", nullable = false)
@@ -27,6 +63,8 @@ public class InventarioEntity {
     }
 
     @Basic
+    @NotNull
+    @Size(min = 2, max = 20)
     @Column(name = "clave_entrada", nullable = false, length = 20)
     public String getClaveEntrada() {
         return claveEntrada;
@@ -37,6 +75,21 @@ public class InventarioEntity {
     }
 
     @Basic
+    @NotNull
+    @Min(1)
+    @Column(name = "tipo_guia", nullable = false)
+    public Integer getTipoGuia() {
+        return tipoGuia;
+    }
+
+    public void setTipoGuia(Integer tipoGuia) {
+        this.tipoGuia = tipoGuia;
+    }
+
+
+    @Basic
+    @NotNull
+    @Min(1)
     @Column(name = "cantidad_inicial", nullable = false)
     public Integer getCantidadInicial() {
         return cantidadInicial;
@@ -47,6 +100,7 @@ public class InventarioEntity {
     }
 
     @Basic
+    @NotNull
     @Column(name = "cantidad_disponible", nullable = false)
     public Integer getCantidadDisponible() {
         return cantidadDisponible;
@@ -56,8 +110,12 @@ public class InventarioEntity {
         this.cantidadDisponible = cantidadDisponible;
     }
 
-    @Basic
+
+
+    @NotNull
     @Column(name = "fecha_entrada", nullable = false)
+    @JsonSerialize(using = JsonDateSerializer.class)
+    @Convert(converter = LocalDateTimeConverter.class)
     public LocalDate getFechaEntrada() {
         return fechaEntrada;
     }
@@ -96,6 +154,11 @@ public class InventarioEntity {
         this.observaciones = observaciones;
     }
 
+//    @JsonIgnore
+//    public String getfechaEntradaAsShort() {
+//        return formatter.format(fechaEntrada);
+//    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -103,6 +166,7 @@ public class InventarioEntity {
         InventarioEntity that = (InventarioEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(claveEntrada, that.claveEntrada) &&
+                Objects.equals(tipoGuia, that.tipoGuia) &&
                 Objects.equals(cantidadInicial, that.cantidadInicial) &&
                 Objects.equals(cantidadDisponible, that.cantidadDisponible) &&
                 Objects.equals(fechaEntrada, that.fechaEntrada) &&
@@ -114,6 +178,6 @@ public class InventarioEntity {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, claveEntrada, cantidadInicial, cantidadDisponible, fechaEntrada, pedidoCompra, edicion, observaciones);
+        return Objects.hash(id, claveEntrada, tipoGuia, cantidadInicial, cantidadDisponible, fechaEntrada, pedidoCompra, edicion, observaciones);
     }
 }
