@@ -4,7 +4,10 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tipoguia", schema = "public", catalog = "controlguias")
@@ -14,6 +17,7 @@ public class TipoguiaEntity {
     private String imagenPortada;
     private String isbn;
     private String caracteristicas;
+    private List<InventarioEntity> inventarios;
 
     @Id
     @NotNull
@@ -71,6 +75,18 @@ public class TipoguiaEntity {
     public void setCaracteristicas(String caracteristicas) {
         this.caracteristicas = caracteristicas;
     }
+
+    @OneToMany(mappedBy = "tipoguia",
+    cascade = CascadeType.ALL,
+    orphanRemoval = true)
+    public List<InventarioEntity> getInventarios(){
+        return inventarios;
+    }
+
+    public void setInventarios(List<InventarioEntity> inventarios) {
+        this.inventarios = inventarios;
+    }
+
 
     @Override
     public boolean equals(Object o) {
