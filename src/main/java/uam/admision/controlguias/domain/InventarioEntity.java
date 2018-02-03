@@ -13,12 +13,16 @@ import javax.validation.constraints.Size;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "inventario", schema = "public", catalog = "controlguias")
 public class InventarioEntity {
 
+    @Transient
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private Integer id;
     private String claveEntrada;
     private Integer tipoGuia;
@@ -30,8 +34,13 @@ public class InventarioEntity {
     private Integer edicion;
     private String observaciones;
 
-    @Transient
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    @OneToMany (
+            mappedBy = "inventario",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+
+    private List<ItemPedidoEntity> itemsPedido = new ArrayList<>();
 
     public InventarioEntity(Integer id, String claveEntrada, Integer tipoGuia, Integer cantidadInicial,
                             Integer cantidadDisponible, String fechaEntradaST, Integer pedidoCompra,
@@ -111,7 +120,6 @@ public class InventarioEntity {
     }
 
 
-
     @NotNull
     @Column(name = "fecha_entrada", nullable = false)
     @JsonSerialize(using = JsonDateSerializer.class)
@@ -154,6 +162,7 @@ public class InventarioEntity {
         this.observaciones = observaciones;
     }
 
+
 //    @JsonIgnore
 //    public String getfechaEntradaAsShort() {
 //        return formatter.format(fechaEntrada);
@@ -180,4 +189,6 @@ public class InventarioEntity {
 
         return Objects.hash(id, claveEntrada, tipoGuia, cantidadInicial, cantidadDisponible, fechaEntrada, pedidoCompra, edicion, observaciones);
     }
+
+
 }

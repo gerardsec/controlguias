@@ -41,5 +41,6 @@ public class InventarioService {
         return repo.findByCustomQuery(word);
     }
     public Integer buscaClaveMayor() {return repo.maxInventario();}
+    public List<InventarioEntity> disponiblesVenta(){return repo.inventarioDisponibles();}
 
 }

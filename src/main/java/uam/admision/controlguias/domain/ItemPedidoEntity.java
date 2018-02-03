@@ -5,15 +5,43 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
-@Table(name = "itemPedido", schema = "public", catalog = "controlguias")
+@Table(name = "itempedido", schema = "public", catalog = "controlguias")
 @IdClass(ItemPedidoEntityPK.class)
 public class ItemPedidoEntity {
     private Integer numPedido;
     private Integer item;
-    private Integer tipoGuia;
     private Integer cantidad;
     private BigDecimal costoUnitario;
-    private InventarioEntity inventarioById;
+    private Integer tipoGuia;
+    private Integer id;
+    private Integer id_inventario;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_inventario")
+    private InventarioEntity inventario;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "numPedido")
+    private PedidoEntity pedido;
+
+    public Integer getId_inventario() {
+        return id_inventario;
+    }
+
+    public void setId_inventario(Integer id_inventario) {
+        this.id_inventario = id_inventario;
+    }
+
+
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        id = id;
+    }
+
 
     @Id
     @Column(name = "num_pedido", nullable = false)
@@ -83,13 +111,5 @@ public class ItemPedidoEntity {
         return Objects.hash(numPedido, item, tipoGuia, cantidad, costoUnitario);
     }
 
-    @ManyToOne
-    @JoinColumn(name = "id", referencedColumnName = "id")
-    public InventarioEntity getInventarioById() {
-        return inventarioById;
-    }
 
-    public void setInventarioById(InventarioEntity inventarioById) {
-        this.inventarioById = inventarioById;
-    }
 }

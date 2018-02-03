@@ -2,6 +2,8 @@ package uam.admision.controlguias.domain;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -16,6 +18,13 @@ public class PedidoEntity {
     private LocalDate fechaEnvio;
     private LocalDate fechaRecibido;
     private Integer estado;
+
+    @OneToMany(
+            mappedBy = "pedido",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<ItemPedidoEntity> itemsPedido = new ArrayList<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

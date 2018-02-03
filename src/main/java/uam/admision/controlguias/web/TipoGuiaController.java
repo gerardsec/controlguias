@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -36,12 +37,17 @@ public class TipoGuiaController {
     /*@Autowired
     private TipoguiaRepository repo;*/
 
-    @Autowired
-    private TipoguiaService repo;
-
 
     @Autowired
     private NotificationService notifyService;
+
+    @Autowired
+    private TipoguiaService repoGuia;
+
+    /*@ModelAttribute("todosTiposGuia")
+    public List<TipoguiaEntity>  generaCatalogoGuias(){
+        return this.repoGuia.listaTodo();
+    }*/
 
     @Bean
     public LayoutDialect layoutDialect() {
@@ -62,7 +68,6 @@ public class TipoGuiaController {
     }
 
     @GetMapping(value = "/guia/addTipoGuia")
-    //public ModelAndView addTipoGuia(ModelAndView model) {
     public ModelAndView addTipoGuia(ModelMap model) {
         TipoguiaEntity tipoGuiaInicial = new TipoguiaEntity();
 
@@ -74,7 +79,7 @@ public class TipoGuiaController {
 
         }
 
-        List<TipoguiaEntity> todosTiposGuia = repo.listaTodo();
+        List<TipoguiaEntity> todosTiposGuia = repoGuia.listaTodo();
         modelAndView.addObject("todosTiposGuia", todosTiposGuia);
         modelAndView.setViewName("addTipoGuia");
         return modelAndView;
@@ -84,7 +89,7 @@ public class TipoGuiaController {
     public ModelAndView addTipoGuia(@Valid TipoguiaEntity tipoGuiaE, BindingResult result,
                                     RedirectAttributes redirectAttributes) {
         ModelAndView formaAlta = new ModelAndView();
-        //TipoguiaEntity tipoGuiaE = new TipoguiaEntity();
+
 
         if (result.hasErrors()) {
             //notifyService.addErrorMessage("Errores en la forma de alta de libros");
@@ -101,14 +106,14 @@ public class TipoGuiaController {
             System.out.print("datos recibidos .....terminando");
 
             try {
-                repo.insertData(tipoGuiaE);
+                repoGuia.insertData(tipoGuiaE);
             } catch (ParseException e) {
                 logger.warn("Error en parse datos");
                 e.printStackTrace();
             }
         }
 
-        List<TipoguiaEntity> todosTiposGuia = repo.listaTodo();
+        List<TipoguiaEntity> todosTiposGuia = repoGuia.listaTodo();
         formaAlta.addObject("todosTiposGuia", todosTiposGuia);
         TipoguiaEntity tipoGuiaInicial = new TipoguiaEntity();
         formaAlta.setViewName("addTipoGuia");

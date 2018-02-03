@@ -10,7 +10,10 @@ import uam.admision.controlguias.domain.TipoguiaEntity;
 import uam.admision.controlguias.repository.TipoguiaRepository;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TipoguiaService {
@@ -40,6 +43,24 @@ public class TipoguiaService {
     }
     public List<TipoguiaEntity> queryagusto(String word){
         return repo.findByCustomQuery(word);
+    }
+    public Map<Integer, String> guiaTipoNombre(){
+        Map<Integer, String> listaGuiaNombre = new HashMap<Integer, String>();
+        List<TipoguiaEntity> listaGuias = repo.findAll();
+
+Integer i = 0;
+        for (TipoguiaEntity tipoguiaEntity : listaGuias) {
+
+            Integer indice = tipoguiaEntity.getTipoGuia();
+            String valor = tipoguiaEntity.getNombreGuia();
+
+            System.out.println("tipo guia:"+indice);
+            System.out.println("nombre guia:"+valor);
+
+            listaGuiaNombre.put(indice,valor);
+            i++;
+        }
+        return listaGuiaNombre;
     }
 
 }

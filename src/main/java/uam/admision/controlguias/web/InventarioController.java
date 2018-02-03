@@ -26,7 +26,9 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import javax.validation.Valid;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class InventarioController {
@@ -37,7 +39,7 @@ public class InventarioController {
     private InventarioRepository repo;*/
 
     @Autowired
-    private InventarioService repo;
+    private InventarioService repoInventario;
 
     @Autowired
     private TipoguiaService repoGuia;
@@ -64,7 +66,11 @@ public class InventarioController {
     public ModelAndView addInventario(ModelMap model) {
         InventarioEntity inventarioInicial = new InventarioEntity();
 
+        Map<Integer, String> listaTiposGuia = repoGuia.guiaTipoNombre();
+
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("listaTiposGuia", listaTiposGuia);
+
         if (model.isEmpty()) {
             logger.warn("modelo vacío ....");
 
@@ -73,7 +79,11 @@ public class InventarioController {
         }
 
         List<TipoguiaEntity> todosTiposGuia = repoGuia.listaTodo();
+
+
+        List<InventarioEntity> todosInventario = repoInventario.listaTodo();
         modelAndView.addObject("todosTiposGuia", todosTiposGuia);
+        modelAndView.addObject("todosInventario", todosInventario);
         modelAndView.setViewName("addInventario");
         return modelAndView;
     }
@@ -82,7 +92,7 @@ public class InventarioController {
     public ModelAndView addInventario(@Valid InventarioEntity inventarioE, BindingResult result,
                                       RedirectAttributes redirectAttributes) {
         ModelAndView formaAlta = new ModelAndView();
-        Integer maxIdInventario = repo.buscaClaveMayor() + 1;
+        Integer maxIdInventario = repoInventario.buscaClaveMayor() + 1;
         logger.warn("Inventario: clave_mayor " + maxIdInventario.toString());
 
 
@@ -101,9 +111,9 @@ public class InventarioController {
             System.out.print("datos recibidos .....terminando");
 
             try {
-                maxIdInventario = repo.buscaClaveMayor() + 1;
+                maxIdInventario = repoInventario.buscaClaveMayor() + 1;
                 inventarioE.setId(maxIdInventario);
-                repo.insertData(inventarioE);
+                repoInventario.insertData(inventarioE);
                 logger.warn(inventarioE.getFechaEntrada().toString());
             } catch (ParseException e) {
                 logger.warn("Inventario: Error en parse datos");
@@ -111,9 +121,11 @@ public class InventarioController {
             }
 
         }
+        Map<Integer, String> listaTiposGuia = repoGuia.guiaTipoNombre();
+        formaAlta.addObject("listaTiposGuia", listaTiposGuia);
 
-        List<TipoguiaEntity> todosTiposGuia = repoGuia.listaTodo();
-        formaAlta.addObject("todosTiposGuia", todosTiposGuia);
+        List<InventarioEntity> todosInventario = repoInventario.listaTodo();
+        formaAlta.addObject("todosInventario", todosInventario);
         InventarioEntity inventarioInicial = new InventarioEntity();
         formaAlta.setViewName("addInventario");
         formaAlta.addObject("inventarioE", inventarioInicial);

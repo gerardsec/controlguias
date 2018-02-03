@@ -15,13 +15,13 @@
         <a href="index.html" th:href="@{/index}"><img src="../static/images/site-logo.png"
                                                       th:src="@{/images/site-logo.png}"/></a>
         <a href="index.html" th:href="@{/index}">Inicio</a>
-        <a href="users/login.html" th:href="@{/users/login}">Login</a>
-        <a href="users/register.html" th:href="@{/users/register}">Register</a>
-        <a href="posts/index.html" th:href="@{/posts}">Posts</a>
+        <a href="usuario/login.html" th:href="@{/usuario/login}">Login</a>
+        <a href="solicitud/solicitaGuias.html" th:href="@{/solicitud/solicitaGuias}">Solicitar guías</a>
+        <a href="/inventario/addInventario.html" th:href="@{/inventario/addInventario}">Inventario</a>
         <a href="guia/addTipoGuia.html" th:href="@{/guia/addTipoGuia}">Nuevo tipo de guía</a>
-        <a href="users/index.html" th:href="@{/users}">Users</a>
+        <a href="usuario/registrar.html" th:href="@{/usuario/admUsuario}">Usuarios</a>
         <div id="logged-in-info"><span>Hola, <b>(user)</b></span>
-            <form method="post" th:action="@{/users/logout}">
+            <form method="post" th:action="@{/usuario/logout}">
                 <input type="submit" value="Logout"/>
             </form>
         </div>
@@ -63,6 +63,36 @@
                    th:href="@{/guias/elimina/{idEliminar}/(idEliminar=${listaGuias.tipoGuia})}">Borrar</a></td>
         </tr>
     </table>
+</div>
+<div class="listaInventario" th:fragment="lista-inventario">
+    <h1 th:text="#{inventario.title}"></h1>
+    <table>
+        <tr>
+            <th>id</th>
+            <th>Clave de entrada</th>
+            <th>Tipo de Guía</th>
+            <th>Nombre guia</th>
+            <th>Cantidad inicial</th>
+            <th>Cantidad disponible</th>
+            <th>Fecha de entrada</th>
+            <th>Pedido o compra</th>
+            <th>Edición</th>
+            <th>Observaciones</th>
+        </tr>
+        <tr th:each="listaInventario : ${todosInventario}">
+            <td th:text="${listaInventario.id}">id</td>
+            <td th:text="${listaInventario.claveEntrada}">clave </td>
+            <td th:text="${listaInventario.tipoGuia}"> tipo guía</td>
+            <td th:text="${listaTiposGuia.get(listaInventario.tipoGuia)}"> tipo guía 2</td>
+            <td th:text="${listaInventario.cantidadInicial}">Cantidad inicial </td>
+            <td th:text="${listaInventario.cantidadDisponible}">cantidad disponible </td>
+            <td th:text="${listaInventario.fechaEntrada}">fecha entrada </td>
+            <td th:text="${listaInventario.pedidoCompra}">Pedido o compra </td>
+            <td th:text="${listaInventario.edicion}">edición </td>
+            <td th:text="${listaInventario.observaciones}">observaciones </td>
+        </tr>
+    </table>
+
 </div>
 <h1>Bienvenido</h1>
 <p>Sistema de control de guías de estudio.</p>
