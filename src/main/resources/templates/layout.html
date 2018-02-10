@@ -98,31 +98,25 @@
     <table>
         <thead>
         <tr>
-            <th>numPedido</th>
-            <th>Solicitante</th>
-            <th>areaSolicita</th>
-            <th>Nombre guia</th>
-            <th>unidadSolicita</th>
-            <th>fechaSolicita</th>
-            <th>fechaSurtido</th>
-            <th>fechaEnvio</th>
-            <th>fechaRecibido</th>
-            <th>estado</th>
+            <th>Pedido</th>
             <th>items</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="listaPedido : ${todosPedido}">
-            <td th:text="${listaPedido.numPedido}">id</td>
-            <td th:text="${listaPedido.solicitante}">id</td>
-            <td th:text="${listaPedido.areaSolicita}">id</td>
-            <td>nombre guía</td>
-            <td th:text="${listaPedido.unidadSolicita}">id</td>
-            <td th:text="${listaPedido.fechaSolicita}">id</td>
-            <td th:text="${listaPedido.fechaSurtido}">id</td>
-            <td th:text="${listaPedido.fechaEnvio}">id</td>
-            <td th:text="${listaPedido.fechaRecibido}">id</td>
-            <td th:text="${listaPedido.estado}">id</td>
+
+            <td>
+            <p th:text="#{pedido.numPedido}+': '+${listaPedido.numPedido}+'.  *'+
+            #{pedido.numPedido}+': '+${listaPedido.solicitante}+'.  *'+
+            #{pedido.numPedido}+': '+${listaPedido.areaSolicita}+'.  *'+
+            #{pedido.numPedido}+': '+'.  *'+
+            #{pedido.numPedido}+': '+${listaPedido.unidadSolicita}+'.  *'+
+            #{pedido.numPedido}+': '+${listaPedido.fechaSolicita}+'.  *'+
+            #{pedido.numPedido}+': '+${listaPedido.fechaSurtido}+'.  *'+
+            #{pedido.numPedido}+': '+${listaPedido.fechaEnvio}+'.  *'+
+            #{pedido.numPedido}+': '+${listaPedido.fechaRecibido}+'.  *'+
+            #{pedido.numPedido}+': '+${listaPedido.estado}">id</p>
+            </td>
             <td>
                 <table>
                     <tbody>

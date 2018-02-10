@@ -1,8 +1,21 @@
 package uam.admision.controlguias.domain;
 
+/*@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+@JsonSerialize(using = JsonDateSerializer.class)
+    @Convert(converter = LocalDateTimeConverter.class)
+    LocalDate
+*/
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.springframework.format.annotation.DateTimeFormat;
+import uam.admision.controlguias.utils.JsonDateSerializer;
+import uam.admision.controlguias.utils.LocalDateTimeConverter;
+
 import javax.persistence.*;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -13,21 +26,20 @@ public class PedidoEntity {
     private String solicitante;
     private String areaSolicita;
     private String unidadSolicita;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fechaSolicita;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fechaSurtido;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fechaEnvio;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fechaRecibido;
     private Integer estado;
-
-    @OneToMany(
-            mappedBy = "pedido",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<ItemPedidoEntity> itemsPedido = new ArrayList<>();
+    //ORIGINAL private Collection<ItempedidoEntity> itempedidosByNumPedido; //
+    //ORIGINAL private Collection<ItempedidoEntity> itempedidos; //
+    private List itempedidos = new ArrayList<>();
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "num_pedido", nullable = false)
     public Integer getNumPedido() {
         return numPedido;
@@ -69,6 +81,8 @@ public class PedidoEntity {
 
     @Basic
     @Column(name = "fecha_solicita", nullable = false)
+    @JsonSerialize(using = JsonDateSerializer.class)
+    @Convert(converter = LocalDateTimeConverter.class)
     public LocalDate getFechaSolicita() {
         return fechaSolicita;
     }
@@ -79,6 +93,8 @@ public class PedidoEntity {
 
     @Basic
     @Column(name = "fecha_surtido", nullable = true)
+    @JsonSerialize(using = JsonDateSerializer.class)
+    @Convert(converter = LocalDateTimeConverter.class)
     public LocalDate getFechaSurtido() {
         return fechaSurtido;
     }
@@ -89,6 +105,8 @@ public class PedidoEntity {
 
     @Basic
     @Column(name = "fecha_envio", nullable = true)
+    @JsonSerialize(using = JsonDateSerializer.class)
+    @Convert(converter = LocalDateTimeConverter.class)
     public LocalDate getFechaEnvio() {
         return fechaEnvio;
     }
@@ -99,6 +117,8 @@ public class PedidoEntity {
 
     @Basic
     @Column(name = "fecha_recibido", nullable = true)
+    @JsonSerialize(using = JsonDateSerializer.class)
+    @Convert(converter = LocalDateTimeConverter.class)
     public LocalDate getFechaRecibido() {
         return fechaRecibido;
     }
@@ -138,4 +158,22 @@ public class PedidoEntity {
 
         return Objects.hash(numPedido, solicitante, areaSolicita, unidadSolicita, fechaSolicita, fechaSurtido, fechaEnvio, fechaRecibido, estado);
     }
+
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    public List<ItempedidoEntity> getItempedidos() {
+        return itempedidos;
+    }
+
+    public void setItempedidos(List<ItempedidoEntity> itempedidos) {
+        this.itempedidos = itempedidos;
+    }
+    //ORIGINAL//
+    /*@OneToMany(mappedBy = "pedidoByNumPedido")
+    public Collection<ItempedidoEntity> getItempedidosByNumPedido() {
+        return itempedidosByNumPedido;
+    }
+
+    public void setItempedidosByNumPedido(Collection<ItempedidoEntity> itempedidosByNumPedido) {
+        this.itempedidosByNumPedido = itempedidosByNumPedido;
+    }*/
 }

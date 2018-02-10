@@ -28,8 +28,7 @@ public class TipoguiaService {
         //TipoguiaEntity algo = new TipoguiaEntity();
         try {
             repo.save(algo);
-        }
-        catch (DataAccessException E) {
+        } catch (DataAccessException E) {
             log.info("Error al escribir nuevo registro");
         }
 
@@ -38,26 +37,28 @@ public class TipoguiaService {
 
     }
 
-    public List<TipoguiaEntity> listaTodo(){
-        return repo.findAll(new Sort(Sort.Direction.ASC,"tipoGuia"));
+    public List<TipoguiaEntity> listaTodo() {
+        return repo.findAll(new Sort(Sort.Direction.ASC, "tipoGuia"));
     }
-    public List<TipoguiaEntity> queryagusto(String word){
+
+    public List<TipoguiaEntity> queryagusto(String word) {
         return repo.findByCustomQuery(word);
     }
-    public Map<Integer, String> guiaTipoNombre(){
+
+    public Map<Integer, String> guiaTipoNombre() {
         Map<Integer, String> listaGuiaNombre = new HashMap<Integer, String>();
         List<TipoguiaEntity> listaGuias = repo.findAll();
 
-Integer i = 0;
+        Integer i = 0;
         for (TipoguiaEntity tipoguiaEntity : listaGuias) {
 
             Integer indice = tipoguiaEntity.getTipoGuia();
             String valor = tipoguiaEntity.getNombreGuia();
 
-            System.out.println("tipo guia:"+indice);
-            System.out.println("nombre guia:"+valor);
+            System.out.println("tipo guia:" + indice);
+            System.out.println("nombre guia:" + valor);
 
-            listaGuiaNombre.put(indice,valor);
+            listaGuiaNombre.put(indice, valor);
             i++;
         }
         return listaGuiaNombre;

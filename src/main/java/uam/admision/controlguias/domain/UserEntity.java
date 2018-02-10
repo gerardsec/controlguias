@@ -1,5 +1,16 @@
 package uam.admision.controlguias.domain;
 
+/*@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+@JsonSerialize(using = JsonDateSerializer.class)
+    @Convert(converter = LocalDateTimeConverter.class)
+    LocalDate
+*/
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.springframework.format.annotation.DateTimeFormat;
+import uam.admision.controlguias.utils.JsonDateSerializer;
+import uam.admision.controlguias.utils.LocalDateTimeConverter;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -13,6 +24,7 @@ public class UserEntity {
     private String fullName;
     private Integer status;
     private Integer blocked;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate timeBlocked;
 
     @Id
@@ -77,6 +89,8 @@ public class UserEntity {
 
     @Basic
     @Column(name = "timeBlocked", nullable = true)
+    @JsonSerialize(using = JsonDateSerializer.class)
+    @Convert(converter = LocalDateTimeConverter.class)
     public LocalDate getTimeBlocked() {
         return timeBlocked;
     }

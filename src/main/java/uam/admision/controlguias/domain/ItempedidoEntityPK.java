@@ -5,7 +5,7 @@ import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class ItemPedidoEntityPK implements Serializable {
+public class ItempedidoEntityPK implements Serializable {
     private Integer numPedido;
     private Integer item;
 
@@ -33,7 +33,7 @@ public class ItemPedidoEntityPK implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ItemPedidoEntityPK that = (ItemPedidoEntityPK) o;
+        ItempedidoEntityPK that = (ItempedidoEntityPK) o;
         return Objects.equals(numPedido, that.numPedido) &&
                 Objects.equals(item, that.item);
     }

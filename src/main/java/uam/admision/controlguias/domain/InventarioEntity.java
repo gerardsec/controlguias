@@ -1,28 +1,24 @@
 package uam.admision.controlguias.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+/*@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+@JsonSerialize(using = JsonDateSerializer.class)
+    @Convert(converter = LocalDateTimeConverter.class)
+    LocalDate
+*/
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.format.annotation.DateTimeFormat;
 import uam.admision.controlguias.utils.JsonDateSerializer;
 import uam.admision.controlguias.utils.LocalDateTimeConverter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
 @Table(name = "inventario", schema = "public", catalog = "controlguias")
 public class InventarioEntity {
-
-    @Transient
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private Integer id;
     private String claveEntrada;
     private Integer tipoGuia;
@@ -33,33 +29,8 @@ public class InventarioEntity {
     private Integer pedidoCompra;
     private Integer edicion;
     private String observaciones;
-
-    @OneToMany (
-            mappedBy = "inventario",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-
-    private List<ItemPedidoEntity> itemsPedido = new ArrayList<>();
-
-    public InventarioEntity(Integer id, String claveEntrada, Integer tipoGuia, Integer cantidadInicial,
-                            Integer cantidadDisponible, String fechaEntradaST, Integer pedidoCompra,
-                            Integer edicion, String observaciones) throws ParseException {
-        this.id = id;
-        this.claveEntrada = claveEntrada;
-        this.tipoGuia = tipoGuia;
-        this.cantidadInicial = cantidadInicial;
-        this.cantidadDisponible = cantidadDisponible;
-
-        this.fechaEntrada = LocalDate.parse(fechaEntradaST, formatter);
-        this.pedidoCompra = pedidoCompra;
-        this.edicion = edicion;
-        this.observaciones = observaciones;
-
-    }
-
-    public InventarioEntity() {
-    }
+    /*private TipoguiaEntity tipoguiaByTipoGuia;*/
+    /*private Collection<ItempedidoEntity> itempedidosById;*/
 
     @Id
     @Column(name = "id", nullable = false)
@@ -72,8 +43,6 @@ public class InventarioEntity {
     }
 
     @Basic
-    @NotNull
-    @Size(min = 2, max = 20)
     @Column(name = "clave_entrada", nullable = false, length = 20)
     public String getClaveEntrada() {
         return claveEntrada;
@@ -84,8 +53,6 @@ public class InventarioEntity {
     }
 
     @Basic
-    @NotNull
-    @Min(1)
     @Column(name = "tipo_guia", nullable = false)
     public Integer getTipoGuia() {
         return tipoGuia;
@@ -95,10 +62,7 @@ public class InventarioEntity {
         this.tipoGuia = tipoGuia;
     }
 
-
     @Basic
-    @NotNull
-    @Min(1)
     @Column(name = "cantidad_inicial", nullable = false)
     public Integer getCantidadInicial() {
         return cantidadInicial;
@@ -109,7 +73,6 @@ public class InventarioEntity {
     }
 
     @Basic
-    @NotNull
     @Column(name = "cantidad_disponible", nullable = false)
     public Integer getCantidadDisponible() {
         return cantidadDisponible;
@@ -119,8 +82,7 @@ public class InventarioEntity {
         this.cantidadDisponible = cantidadDisponible;
     }
 
-
-    @NotNull
+    @Basic
     @Column(name = "fecha_entrada", nullable = false)
     @JsonSerialize(using = JsonDateSerializer.class)
     @Convert(converter = LocalDateTimeConverter.class)
@@ -162,12 +124,6 @@ public class InventarioEntity {
         this.observaciones = observaciones;
     }
 
-
-//    @JsonIgnore
-//    public String getfechaEntradaAsShort() {
-//        return formatter.format(fechaEntrada);
-//    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -190,5 +146,22 @@ public class InventarioEntity {
         return Objects.hash(id, claveEntrada, tipoGuia, cantidadInicial, cantidadDisponible, fechaEntrada, pedidoCompra, edicion, observaciones);
     }
 
+    /*@ManyToOne
+    @JoinColumn(name = "tipo_guia", referencedColumnName = "tipo_guia", nullable = false)
+    public TipoguiaEntity getTipoguiaByTipoGuia() {
+        return tipoguiaByTipoGuia;
+    }
 
+    public void setTipoguiaByTipoGuia(TipoguiaEntity tipoguiaByTipoGuia) {
+        this.tipoguiaByTipoGuia = tipoguiaByTipoGuia;
+    }*/
+
+    /*@OneToMany(mappedBy = "inventarioByIdInventario")
+    public Collection<ItempedidoEntity> getItempedidosById() {
+        return itempedidosById;
+    }
+
+    public void setItempedidosById(Collection<ItempedidoEntity> itempedidosById) {
+        this.itempedidosById = itempedidosById;
+    }*/
 }

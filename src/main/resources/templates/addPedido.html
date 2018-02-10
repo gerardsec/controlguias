@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en-US" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="layout :: site-head">
+    <meta charset="utf-8"></meta>
+    <meta http-equiv="Content-Type" content="text/html"></meta>
+    <title>Pedidos</title>
+</head>
+<body>
+<header th:replace="layout :: site-header"/>
+
+<div th:replace="layout :: lista-pedido">
+    Pedido
+</div>
+<div class="container">
+    <h1>Agrega Pedido</h1>
+    <form action="#" th:action="@{/pedido/addPedido}" th:object="${pedidoE}" method="post">
+        <table>
+            <tr>
+                <td>
+                    <input type="text" th:field="${pedidoE.solicitante}" placeholder="Solicitante"/>
+                </td>
+                <td>
+                    <p th:if="${#fields.hasErrors('solicitante')}" th:errors="*{solicitante}">Error en Solicitante</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" th:field="${pedidoE.areaSolicita}" placeholder="Área del Solicitante"/>
+                </td>
+                <td>
+                    <p th:if="${#fields.hasErrors('areaSolicita')}" th:errors="*{areaSolicita}">Error en Área
+                        Solicitante</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" th:field="${pedidoE.unidadSolicita}" placeholder="Unidad del Solicitante"/>
+                </td>
+                <td>
+                    <p th:if="${#fields.hasErrors('unidadSolicita')}" th:errors="*{unidadSolicita}">Error en Unidad del
+                        Solicitante</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" th:field="${pedidoE.estado}" placeholder="Estado"/>
+                </td>
+                <td>
+                    <p th:if="${#fields.hasErrors('estado')}" th:errors="*{estado}">Error en estado</p>
+                </td>
+            </tr>
+
+        </table>
+        <!--     <p th:text="${#date.format(*{created},'yyyy-MM-dd')}"></p>  -->
+        <input type="submit" value="Agregar"/>
+    </form>
+</div>
+<footer th:replace="layout :: site-footer"/>
+</body>
+</html>

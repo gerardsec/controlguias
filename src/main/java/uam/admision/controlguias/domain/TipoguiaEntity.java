@@ -1,13 +1,8 @@
 package uam.admision.controlguias.domain;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "tipoguia", schema = "public", catalog = "controlguias")
@@ -17,10 +12,9 @@ public class TipoguiaEntity {
     private String imagenPortada;
     private String isbn;
     private String caracteristicas;
-
+    /*private Collection<InventarioEntity> inventariosByTipoGuia;*/
 
     @Id
-    @NotNull
     @Column(name = "tipo_guia", nullable = false)
     public Integer getTipoGuia() {
         return tipoGuia;
@@ -31,8 +25,6 @@ public class TipoguiaEntity {
     }
 
     @Basic
-    @NotNull
-    @Size(min=1, max=60)
     @Column(name = "nombre_guia", nullable = false, length = 60)
     public String getNombreGuia() {
         return nombreGuia;
@@ -43,7 +35,6 @@ public class TipoguiaEntity {
     }
 
     @Basic
-    @Size(max=20)
     @Column(name = "imagen_portada", nullable = true, length = 40)
     public String getImagenPortada() {
         return imagenPortada;
@@ -54,8 +45,6 @@ public class TipoguiaEntity {
     }
 
     @Basic
-    @NotNull
-    @Size(min=8, max=20)
     @Column(name = "isbn", nullable = false, length = 20)
     public String getIsbn() {
         return isbn;
@@ -66,7 +55,6 @@ public class TipoguiaEntity {
     }
 
     @Basic
-    @NotNull
     @Column(name = "caracteristicas", nullable = false, length = -1)
     public String getCaracteristicas() {
         return caracteristicas;
@@ -75,7 +63,6 @@ public class TipoguiaEntity {
     public void setCaracteristicas(String caracteristicas) {
         this.caracteristicas = caracteristicas;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -94,4 +81,13 @@ public class TipoguiaEntity {
 
         return Objects.hash(tipoGuia, nombreGuia, imagenPortada, isbn, caracteristicas);
     }
+
+    /*@OneToMany(mappedBy = "tipoguiaByTipoGuia")
+    public Collection<InventarioEntity> getInventariosByTipoGuia() {
+        return inventariosByTipoGuia;
+    }
+
+    public void setInventariosByTipoGuia(Collection<InventarioEntity> inventariosByTipoGuia) {
+        this.inventariosByTipoGuia = inventariosByTipoGuia;
+    }*/
 }
