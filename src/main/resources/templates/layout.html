@@ -3,7 +3,7 @@
 <head th:fragment="site-head">
     <meta charset="utf-8"></meta>
     <meta http-equiv="Content-Type" content="text/html"></meta>
-    <link rel="stylesheet" href="../static/css/styles.css" th:href="@{/css/styles.css}"/>
+    <link rel="stylesheet" type="text/css" media="all" href="../../css/stsm.css" th:href="@{/css/stsm.css}"/>
     <link rel="icon" href="../static/images/favicon.ico" th:href="@{/images/favicon.ico}"/>
     <!--<script src="../static/js/jquery-3.1.0.min.js" th:src="@{/js/jquery-3.1.0.min.js}"></script>
     <script src="../static/js/blog-scripts.js" th:src="@{/js/blog-scripts.js}"></script> -->
@@ -12,11 +12,11 @@
 <body>
 <header th:fragment="site-header">
     <header>
-        <a href="index.html" th:href="@{/index}"><img src="../static/images/site-logo.png"
-                                                      th:src="@{/images/site-logo.png}"/></a>
+        <a href="index.html" th:href="@{/index}"><img src="../static/images/logotipo_400.png" style="width:100px;height:60px;"
+                                                      th:src="@{/images/logotipo_400.png}" th:style="'width:150px;'"/></a>
         <a href="index.html" th:href="@{/index}">Inicio</a>
         <a href="usuario/login.html" th:href="@{/usuario/login}">Login</a>
-        <a href="solicitud/solicitaGuias.html" th:href="@{/solicitud/solicitaGuias}">Solicitar guías</a>
+        <a href="pedido/addPedido.html" th:href="@{/pedido/addPedido}">Solicitar guías</a>
         <a href="/inventario/addInventario.html" th:href="@{/inventario/addInventario}">Inventario</a>
         <a href="guia/addTipoGuia.html" th:href="@{/guia/addTipoGuia}">Nuevo tipo de guía</a>
         <a href="usuario/registrar.html" th:href="@{/usuario/admUsuario}">Usuarios</a>
@@ -36,11 +36,9 @@
 
           T(uam.admision.controlguias.service.NotificationServiceImpl).NOTIFY_MSG_SESSION_KEY)}"></span> -->
 
-    </ul>
-
 
 </header>
-<div class="listaGuias" th:fragment="lista-guias">
+<div class="seedstarterlist" th:fragment="lista-guias">
     <h1>Catálogo de tipos de guía</h1>
     <table>
         <tr>
@@ -64,7 +62,7 @@
         </tr>
     </table>
 </div>
-<div class="listaInventario" th:fragment="lista-inventario">
+<div class="seedstarterlist" th:fragment="lista-inventario">
     <h1 th:text="#{inventario.title}"></h1>
     <table>
         <tr>
@@ -81,16 +79,65 @@
         </tr>
         <tr th:each="listaInventario : ${todosInventario}">
             <td th:text="${listaInventario.id}">id</td>
-            <td th:text="${listaInventario.claveEntrada}">clave </td>
+            <td th:text="${listaInventario.claveEntrada}">clave</td>
             <td th:text="${listaInventario.tipoGuia}"> tipo guía</td>
             <td th:text="${listaTiposGuia.get(listaInventario.tipoGuia)}"> tipo guía 2</td>
-            <td th:text="${listaInventario.cantidadInicial}">Cantidad inicial </td>
-            <td th:text="${listaInventario.cantidadDisponible}">cantidad disponible </td>
-            <td th:text="${listaInventario.fechaEntrada}">fecha entrada </td>
-            <td th:text="${listaInventario.pedidoCompra}">Pedido o compra </td>
-            <td th:text="${listaInventario.edicion}">edición </td>
-            <td th:text="${listaInventario.observaciones}">observaciones </td>
+            <td th:text="${listaInventario.cantidadInicial}">Cantidad inicial</td>
+            <td th:text="${listaInventario.cantidadDisponible}">cantidad disponible</td>
+            <td th:text="${listaInventario.fechaEntrada}">fecha entrada</td>
+            <td th:text="${listaInventario.pedidoCompra}">Pedido o compra</td>
+            <td th:text="${listaInventario.edicion}">edición</td>
+            <td th:text="${listaInventario.observaciones}">observaciones</td>
         </tr>
+    </table>
+
+</div>
+
+<div class="seedstarterlist" th:fragment="lista-pedido">
+    <h1 th:text="#{pedido.title}"></h1>
+    <table>
+        <thead>
+        <tr>
+            <th>numPedido</th>
+            <th>Solicitante</th>
+            <th>areaSolicita</th>
+            <th>Nombre guia</th>
+            <th>unidadSolicita</th>
+            <th>fechaSolicita</th>
+            <th>fechaSurtido</th>
+            <th>fechaEnvio</th>
+            <th>fechaRecibido</th>
+            <th>estado</th>
+            <th>items</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="listaPedido : ${todosPedido}">
+            <td th:text="${listaPedido.numPedido}">id</td>
+            <td th:text="${listaPedido.solicitante}">id</td>
+            <td th:text="${listaPedido.areaSolicita}">id</td>
+            <td>nombre guía</td>
+            <td th:text="${listaPedido.unidadSolicita}">id</td>
+            <td th:text="${listaPedido.fechaSolicita}">id</td>
+            <td th:text="${listaPedido.fechaSurtido}">id</td>
+            <td th:text="${listaPedido.fechaEnvio}">id</td>
+            <td th:text="${listaPedido.fechaRecibido}">id</td>
+            <td th:text="${listaPedido.estado}">id</td>
+            <td>
+                <table>
+                    <tbody>
+
+                    <tr th:each="row, rowStat : ${listaPedido.itempedidos}">
+                        <td th:text="${rowStat.count}">1</td>
+                        <td th:text="${row.cantidad}">2</td>
+                        <td th:text="${row.tipoGuia}">3</td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        </tbody>
     </table>
 
 </div>
