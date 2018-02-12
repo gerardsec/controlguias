@@ -9,6 +9,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -21,7 +22,9 @@ import uam.admision.controlguias.domain.TipoguiaEntity;
 import uam.admision.controlguias.service.PedidoService;
 import uam.admision.controlguias.service.TipoguiaService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigInteger;
 import java.text.ParseException;
 
 import java.time.LocalDate;
@@ -121,6 +124,17 @@ public class PedidoController {
                 pedidoE.setFechaRecibido(null);
                 pedidoE.setFechaSurtido(null);
 
+                //items
+                ItempedidoEntity itempedidoEntity = new ItempedidoEntity();
+                itempedidoEntity.setNumPedido(pedidoE.getNumPedido());
+                itempedidoEntity.setItem(1);
+                itempedidoEntity.setCantidad(1000);
+                itempedidoEntity.setCostoUnitario(BigInteger.valueOf(10));
+                itempedidoEntity.setTipoGuia(1);
+                itempedidoEntity.setIdInventario(26);
+                itempedidoEntity.setId(1);
+                pedidoE.getItempedidos().add(itempedidoEntity);
+
                 repoPedido.insertData(pedidoE);
                 //  logger.warn(pedidoE.getFechaEntrada().toString());
             } catch (ParseException e) {
@@ -138,6 +152,21 @@ public class PedidoController {
         formaAlta.setViewName("addPedido");
         formaAlta.addObject("pedidoE", pedidoInicial);
         return formaAlta;
+    }
+
+    @RequestMapping(value="/pedido/addPedido", params={"addRow"})
+    public String addRow(final PedidoEntity pedidoEntity, final BindingResult bindingResult) {
+        pedidoEntity.getItempedidos().add(new ItempedidoEntity());
+        return "/pedido/addPedido";
+    }
+
+    @RequestMapping(value="/pedido/addPedido", params={"removeRow"})
+    public String removeRow(
+            final PedidoEntity seedStarter, final BindingResult bindingResult,
+            final HttpServletRequest req) {
+        final Integer rowId = Integer.valueOf(req.getParameter("removeRow"));
+        seedStarter.getItempedidos().remove(rowId.intValue());
+        return "/pedido/addPedido";
     }
 
 }
