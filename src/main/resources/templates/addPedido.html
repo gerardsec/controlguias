@@ -87,6 +87,7 @@
                             <option th:each="inventarioDisponible : ${listaInventarioDisponible}"
                                     th:value="${inventarioDisponible.id}"
                                     th:text="${inventarioDisponible.id + ', '+ inventarioDisponible.tipoGuia +
+                                    '-'+inventarioDisponible.tipoguia.nombreGuia+
                                 ', Disponible:'+inventarioDisponible.cantidadDisponible}">opcion
                             </option>
                         </select>

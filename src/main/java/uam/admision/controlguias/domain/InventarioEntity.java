@@ -29,7 +29,7 @@ public class InventarioEntity {
     private Integer pedidoCompra;
     private Integer edicion;
     private String observaciones;
-    /*private TipoguiaEntity tipoguiaByTipoGuia;*/
+    private TipoguiaEntity tipoguia;
     /*private Collection<ItempedidoEntity> itempedidosById;*/
 
     @Id
@@ -146,15 +146,16 @@ public class InventarioEntity {
         return Objects.hash(id, claveEntrada, tipoGuia, cantidadInicial, cantidadDisponible, fechaEntrada, pedidoCompra, edicion, observaciones);
     }
 
-    /*@ManyToOne
-    @JoinColumn(name = "tipo_guia", referencedColumnName = "tipo_guia", nullable = false)
-    public TipoguiaEntity getTipoguiaByTipoGuia() {
-        return tipoguiaByTipoGuia;
+    @ManyToOne
+    @JoinColumn(name = "tipo_guia", referencedColumnName = "tipo_guia",updatable = false, insertable = false, nullable = false)
+    public TipoguiaEntity getTipoguia() {
+        return tipoguia;
     }
 
-    public void setTipoguiaByTipoGuia(TipoguiaEntity tipoguiaByTipoGuia) {
-        this.tipoguiaByTipoGuia = tipoguiaByTipoGuia;
-    }*/
+    public void setTipoguia(TipoguiaEntity tipoguia) {
+        this.tipoguia = tipoguia;
+    }
+
 
     /*@OneToMany(mappedBy = "inventarioByIdInventario")
     public Collection<ItempedidoEntity> getItempedidosById() {

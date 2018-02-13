@@ -1,7 +1,9 @@
 package uam.admision.controlguias.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -12,7 +14,7 @@ public class TipoguiaEntity {
     private String imagenPortada;
     private String isbn;
     private String caracteristicas;
-    /*private Collection<InventarioEntity> inventariosByTipoGuia;*/
+    private List inventarios = new ArrayList<>();
 
     @Id
     @Column(name = "tipo_guia", nullable = false)
@@ -82,12 +84,14 @@ public class TipoguiaEntity {
         return Objects.hash(tipoGuia, nombreGuia, imagenPortada, isbn, caracteristicas);
     }
 
-    /*@OneToMany(mappedBy = "tipoguiaByTipoGuia")
-    public Collection<InventarioEntity> getInventariosByTipoGuia() {
-        return inventariosByTipoGuia;
+    @OneToMany(mappedBy = "tipoguia", cascade = CascadeType.ALL)
+    public List<InventarioEntity> getInventarios() {
+        return inventarios;
     }
 
-    public void setInventariosByTipoGuia(Collection<InventarioEntity> inventariosByTipoGuia) {
-        this.inventariosByTipoGuia = inventariosByTipoGuia;
-    }*/
+    public void setInventarios(List<InventarioEntity> inventarios) {
+        this.inventarios = inventarios;
+    }
+
+
 }
