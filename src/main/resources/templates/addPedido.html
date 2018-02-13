@@ -52,6 +52,53 @@
 
         </table>
         <!--     <p th:text="${#date.format(*{created},'yyyy-MM-dd')}"></p>  -->
+
+        <!-- /* Tabla para los items del pediod, en renglones   */-->
+        <div class="seedstarterlist">
+            <table>
+                <thead>
+                <tr>
+                    <th th:text="#{pedido.items.item}">Artículo</th>
+                    <th th:text="#{pedido.items.cantidad}">Cantidad</th>
+                    <th th:text="#{pedido.items.costounitario}">Costo Unitario</th>
+                    <th th:text="#{pedido.items.tipoguia}">Tipo de guía</th>
+                    <th th:text="#{pedido.items.id}">Clave</th>
+                    <th th:text="#{pedido.items.idinventario}">Inventario</th>
+
+                </tr>
+                <tr>
+                    <td>
+                        ---
+                    </td>
+                    <td>
+                        <input type="text" th:field="${itemagregar.cantidad}" placeholder="Cantidad requerida"/>
+                    </td>
+                    <td>
+                        ---
+                    </td>
+                    <td>
+                        ---
+                    </td>
+                    <td>
+                        ---
+                    </td>
+                    <td>
+                        <select th:field="${itemagregar.idInventario}">
+                            <option th:each="inventarioDisponible : ${listaInventarioDisponible}"
+                                    th:value="${inventarioDisponible.id}"
+                                    th:text="${inventarioDisponible.id + ', '+ inventarioDisponible.tipoGuia +
+                                ', Disponible:'+inventarioDisponible.cantidadDisponible}">opcion
+                            </option>
+                        </select>
+                    </td>
+                    <td>
+                        <button type="submit" name="addRow" th:text="#{pedido.boton.agregaItem}">Add row</button>
+                    </td>
+                </tr>
+
+                </thead>
+            </table>
+        </div>
         <input type="submit" value="Agregar"/>
     </form>
 </div>

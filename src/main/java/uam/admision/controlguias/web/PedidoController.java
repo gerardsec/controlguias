@@ -15,10 +15,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
+import uam.admision.controlguias.domain.InventarioEntity;
 import uam.admision.controlguias.domain.ItempedidoEntity;
 import uam.admision.controlguias.domain.PedidoEntity;
 import uam.admision.controlguias.domain.TipoguiaEntity;
 
+import uam.admision.controlguias.service.InventarioService;
 import uam.admision.controlguias.service.PedidoService;
 import uam.admision.controlguias.service.TipoguiaService;
 
@@ -47,10 +49,14 @@ public class PedidoController {
     @Autowired
     private TipoguiaService repoGuia;
 
+    @Autowired
+    private InventarioService repoInventario;
 
     @GetMapping(value = "/pedido/addPedido")
     public ModelAndView addPedido(ModelMap model) {
+
         PedidoEntity pedidoInicial = new PedidoEntity();
+        ItempedidoEntity itemAgregar = new ItempedidoEntity();
 
         Map<Integer, String> listaTiposGuia = repoGuia.guiaTipoNombre();
 
@@ -65,11 +71,13 @@ public class PedidoController {
         }
 
         List<TipoguiaEntity> todosTiposGuia = repoGuia.listaTodo();
-
-
+        List<InventarioEntity> listaInventarioDisponible = repoInventario.listaTodo();
         List<PedidoEntity> todosPedido = repoPedido.listaTodo();
+
         modelAndView.addObject("todosTiposGuia", todosTiposGuia);
         modelAndView.addObject("todosPedido", todosPedido);
+        modelAndView.addObject("itemagregar", itemAgregar);
+        modelAndView.addObject("listaInventarioDisponible", listaInventarioDisponible);
         modelAndView.setViewName("addPedido");
         return modelAndView;
     }
@@ -154,13 +162,13 @@ public class PedidoController {
         return formaAlta;
     }
 
-    @RequestMapping(value="/pedido/addPedido", params={"addRow"})
+    @RequestMapping(value = "/pedido/addPedido", params = {"addRow"})
     public String addRow(final PedidoEntity pedidoEntity, final BindingResult bindingResult) {
         pedidoEntity.getItempedidos().add(new ItempedidoEntity());
         return "/pedido/addPedido";
     }
 
-    @RequestMapping(value="/pedido/addPedido", params={"removeRow"})
+    @RequestMapping(value = "/pedido/addPedido", params = {"removeRow"})
     public String removeRow(
             final PedidoEntity seedStarter, final BindingResult bindingResult,
             final HttpServletRequest req) {
