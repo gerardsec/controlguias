@@ -1,10 +1,5 @@
 package uam.admision.controlguias.domain;
 
-/*@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-@JsonSerialize(using = JsonDateSerializer.class)
-    @Convert(converter = LocalDateTimeConverter.class)
-    LocalDate
-*/
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,6 +7,9 @@ import uam.admision.controlguias.utils.JsonDateSerializer;
 import uam.admision.controlguias.utils.LocalDateTimeConverter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -51,6 +49,7 @@ public class PedidoEntity {
 
     @Basic
     @Column(name = "solicitante", nullable = false, length = 40)
+    @Size(min = 1, max=40)
     public String getSolicitante() {
         return solicitante;
     }
@@ -61,6 +60,7 @@ public class PedidoEntity {
 
     @Basic
     @Column(name = "area_solicita", nullable = false, length = 40)
+    @Size(min = 1, max=40)
     public String getAreaSolicita() {
         return areaSolicita;
     }
@@ -71,6 +71,7 @@ public class PedidoEntity {
 
     @Basic
     @Column(name = "unidad_solicita", nullable = false, length = 12)
+    @Size(min = 1, max=40)
     public String getUnidadSolicita() {
         return unidadSolicita;
     }
@@ -129,6 +130,8 @@ public class PedidoEntity {
 
     @Basic
     @Column(name = "estado", nullable = false)
+    @Min(1)
+    @Max(100)
     public Integer getEstado() {
         return estado;
     }

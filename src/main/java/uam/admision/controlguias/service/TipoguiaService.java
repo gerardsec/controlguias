@@ -55,8 +55,8 @@ public class TipoguiaService {
             Integer indice = tipoguiaEntity.getTipoGuia();
             String valor = tipoguiaEntity.getNombreGuia();
 
-            System.out.println("tipo guia:" + indice);
-            System.out.println("nombre guia:" + valor);
+            //System.out.println("tipo guia:" + indice);
+            //System.out.println("nombre guia:" + valor);
 
             listaGuiaNombre.put(indice, valor);
             i++;

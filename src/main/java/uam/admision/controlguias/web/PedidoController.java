@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -20,6 +17,7 @@ import uam.admision.controlguias.domain.ItempedidoEntity;
 import uam.admision.controlguias.domain.PedidoEntity;
 import uam.admision.controlguias.domain.TipoguiaEntity;
 
+import uam.admision.controlguias.service.EstadoService;
 import uam.admision.controlguias.service.InventarioService;
 import uam.admision.controlguias.service.PedidoService;
 import uam.admision.controlguias.service.TipoguiaService;
@@ -52,16 +50,24 @@ public class PedidoController {
     @Autowired
     private InventarioService repoInventario;
 
+    @Autowired
+    private EstadoService repoEstado;
+
+
     @GetMapping(value = "/pedido/addPedido")
     public ModelAndView addPedido(ModelMap model) {
+        logger.warn("Entrando a getmapping");
 
         PedidoEntity pedidoInicial = new PedidoEntity();
+        pedidoInicial.setEstado(1);
         ItempedidoEntity itemAgregar = new ItempedidoEntity();
 
         Map<Integer, String> listaTiposGuia = repoGuia.guiaTipoNombre();
+        Map<Integer, String> listaEstados = repoEstado.listaEstados();
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("listaTiposGuia", listaTiposGuia);
+        modelAndView.addObject("listaEstados", listaEstados);
 
         if (model.isEmpty()) {
             logger.warn("modelo vacío ....");
@@ -82,39 +88,44 @@ public class PedidoController {
         return modelAndView;
     }
 
-    @GetMapping(value = "pedido/pruebapedido")
-    public void pruebapedido() {
-
-        List<PedidoEntity> listadetodo = repoPedido.listaTodo();
-
-
-        for (PedidoEntity pedidoEntity : listadetodo) {
-
-            Integer indice = pedidoEntity.getNumPedido();
-            System.out.println("pedido:" + indice);
-            List<ItempedidoEntity> itemspedido = pedidoEntity.getItempedidos();
-            for (ItempedidoEntity itempedido : itemspedido) {
-                System.out.println("nombre guia:" + itempedido.getTipoGuia());
-
-            }
-
-        }
-        return;
-    }
 
     @PostMapping(value = "/pedido/addPedido")
     public ModelAndView addPedido(@Valid PedidoEntity pedidoE, BindingResult result,
-                                  RedirectAttributes redirectAttributes) {
+                                  ItempedidoEntity itemagregar,
+                                  RedirectAttributes redirectAttributes,
+                                  @RequestParam Map<String, String> paramMap) {
+        logger.warn("Entrando a postmapping");
+
+
+
         ModelAndView formaAlta = new ModelAndView();
         Integer maxIdPedido = repoPedido.buscaClaveMayor() + 1;
         logger.warn("Inventario: clave_mayor " + maxIdPedido.toString());
 
+        if (paramMap.containsKey("addRow")){
+
+            logger.warn("----> Solicitando agregar renglón");
+            //redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.inventarioE", result);
+            redirectAttributes.addFlashAttribute("inventarioE", pedidoE);
+            pedidoE.getItempedidos().add(new ItempedidoEntity());
+
+            return new ModelAndView("redirect:/pedido/addPedido");
+        }
+
+        /*if (paramMap.containsKey("removeRow")){
+            final PedidoEntity seedStarter, final BindingResult bindingResult,
+            final HttpServletRequest req) {
+                final Integer rowId = Integer.valueOf(req.getParameter("removeRow"));
+                seedStarter.getItempedidos().remove(rowId.intValue());
+                return "/pedido/addPedido";
+        }*/
 
         if (result.hasErrors()) {
             //notifyService.addErrorMessage("Errores en la forma de alta de libros");
-            logger.warn("Inventario: Errores en la forma de alta ");
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.inventarioE", result);
-            redirectAttributes.addFlashAttribute("inventarioE", pedidoE);
+            logger.warn("Pedido: Errores en la forma de alta ");
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.pedidoE", result);
+            redirectAttributes.addFlashAttribute("pedidoE", pedidoE);
+            redirectAttributes.addFlashAttribute("itemagregar", itemagregar);
 
             return new ModelAndView("redirect:/pedido/addPedido");
 
@@ -151,7 +162,7 @@ public class PedidoController {
             }
 
         }
-        Map<Integer, String> listaTiposGuia = repoGuia.guiaTipoNombre();
+        /*Map<Integer, String> listaTiposGuia = repoGuia.guiaTipoNombre();
         formaAlta.addObject("listaTiposGuia", listaTiposGuia);
 
         List<PedidoEntity> todosPedido = repoPedido.listaTodo();
@@ -159,22 +170,9 @@ public class PedidoController {
         PedidoEntity pedidoInicial = new PedidoEntity();
         formaAlta.setViewName("addPedido");
         formaAlta.addObject("pedidoE", pedidoInicial);
-        return formaAlta;
+        return formaAlta;*/
+        return new ModelAndView("redirect:/pedido/addPedido");
     }
 
-    @RequestMapping(value = "/pedido/addPedido", params = {"addRow"})
-    public String addRow(final PedidoEntity pedidoEntity, final BindingResult bindingResult) {
-        pedidoEntity.getItempedidos().add(new ItempedidoEntity());
-        return "/pedido/addPedido";
-    }
-
-    @RequestMapping(value = "/pedido/addPedido", params = {"removeRow"})
-    public String removeRow(
-            final PedidoEntity seedStarter, final BindingResult bindingResult,
-            final HttpServletRequest req) {
-        final Integer rowId = Integer.valueOf(req.getParameter("removeRow"));
-        seedStarter.getItempedidos().remove(rowId.intValue());
-        return "/pedido/addPedido";
-    }
 
 }

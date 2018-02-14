@@ -42,8 +42,14 @@
                 </td>
             </tr>
             <tr>
+
                 <td>
-                    <input type="text" th:field="${pedidoE.estado}" placeholder="Estado"/>
+                    <select th:field="${pedidoE.estado}">
+                        <option th:each="estadoL : ${listaEstados}"
+                                th:value="${estadoL.idEstado}"
+                                th:text="${estadoL.describeLargo}">opcion
+                        </option>
+                    </select>
                 </td>
                 <td>
                     <p th:if="${#fields.hasErrors('estado')}" th:errors="*{estado}">Error en estado</p>
