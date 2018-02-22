@@ -22,7 +22,7 @@ public class EstadoEntity {
     }
 
     @Basic
-    @Column(name = "describe_corto", nullable = false, length = 15)
+    @Column(name = "describe_corto", nullable = false, length = 20)
     public String getDescribeCorto() {
         return describeCorto;
     }
@@ -32,7 +32,7 @@ public class EstadoEntity {
     }
 
     @Basic
-    @Column(name = "describe_largo", nullable = false, length = 30)
+    @Column(name = "describe_largo", nullable = false, length = 40)
     public String getDescribeLargo() {
         return describeLargo;
     }

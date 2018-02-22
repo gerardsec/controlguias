@@ -49,8 +49,10 @@
             </tr>
             <tr>
                 <td>
-                    <input type="text" th:field="${tipoGuiaE.caracteristicas}" placeholder="Características generales"/>
+                  <!--  <input type="textarea" th:field="${tipoGuiaE.caracteristicas}" placeholder="Características generales"/> -->
+                    <p><textarea th:field="*{caracteristicas}" placeholder="Características generales"></textarea></p>
                 </td>
+
                 <td>
                     <p th:if="${#fields.hasErrors('caracteristicas')}" th:errors="*{caracteristicas}">caraceristicas incorrecto</p>
                 </td>

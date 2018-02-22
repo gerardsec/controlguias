@@ -80,8 +80,7 @@
             </tr>
             <tr>
                 <td>
-                    <input type="text" th:field="${inventarioE.observaciones}" placeholder="Observaciones"/>
-
+                    <p><textarea th:field="*{observaciones}" placeholder="Observaciones"></textarea></p>
                 </td>
                 <td>
                     <p th:if="${#fields.hasErrors('observaciones')}" th:errors="*{observaciones}">Observaciones</p>
