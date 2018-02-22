@@ -2,6 +2,8 @@ package uam.admision.controlguias.web;
 
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -14,7 +16,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import java.util.Locale;
 
-@RestController
+@Controller
 public class ConfigurationController {
 
 //    @Bean
@@ -47,6 +49,12 @@ public class ConfigurationController {
         engine.setTemplateResolver(templateResolver);
         return engine;
     }
+
+    @GetMapping(value = "prueba/pruebare")
+    String pruebare(){
+        return "index";
+    }
+
 
 
 }

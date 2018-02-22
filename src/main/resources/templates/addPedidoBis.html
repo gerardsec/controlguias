@@ -13,7 +13,7 @@
 </div>
 <div class="container">
     <h1>Agrega Pedido</h1>
-    <form action="#" th:action="@{/pedido/addPedido}" th:object="${pedidoE}" method="post">
+    <form action="#" th:action="@{/prueba/addPedidoBis}" th:object="${pedidoE}" method="post">
         <table>
             <tr>
                 <td>
@@ -57,9 +57,7 @@
             </tr>
 
         </table>
-        <!--     <p th:text="${#date.format(*{created},'yyyy-MM-dd')}"></p>  -->
 
-        <!-- /* Tabla para los items del pediod, en renglones   */-->
         <div class="seedstarterlist">
             <table>
                 <thead>
@@ -99,7 +97,7 @@
                         </select>
                     </td>
                     <td>
-                        <button type="submit" name="addRow" th:text="#{pedido.boton.agregaItem}">Add row</button>
+                        <button type="submit" name="addItem" th:text="#{pedido.boton.agregaItem}">Add row</button>
                     </td>
                 </tr>
 

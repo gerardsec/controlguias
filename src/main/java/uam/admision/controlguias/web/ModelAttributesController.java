@@ -9,7 +9,7 @@ import uam.admision.controlguias.service.TipoguiaService;
 
 import java.util.List;
 
-@RestController
+@Controller
 public class ModelAttributesController {
 
     /*@Autowired

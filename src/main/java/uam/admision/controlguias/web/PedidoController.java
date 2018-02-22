@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@RestController
+@Controller
 public class PedidoController {
 
     private static final Logger logger = LoggerFactory.getLogger(PedidoController.class);
@@ -70,7 +71,7 @@ public class PedidoController {
         modelAndView.addObject("listaEstados", listaEstados);
 
         if (model.isEmpty()) {
-            logger.warn("modelo vacío ....");
+            logger.warn("modelo vacío ....Inicio de pedidos");
 
             modelAndView.addObject("pedidoE", pedidoInicial);
 
@@ -162,15 +163,7 @@ public class PedidoController {
             }
 
         }
-        /*Map<Integer, String> listaTiposGuia = repoGuia.guiaTipoNombre();
-        formaAlta.addObject("listaTiposGuia", listaTiposGuia);
 
-        List<PedidoEntity> todosPedido = repoPedido.listaTodo();
-        formaAlta.addObject("todosPedido", todosPedido);
-        PedidoEntity pedidoInicial = new PedidoEntity();
-        formaAlta.setViewName("addPedido");
-        formaAlta.addObject("pedidoE", pedidoInicial);
-        return formaAlta;*/
         return new ModelAndView("redirect:/pedido/addPedido");
     }
 
