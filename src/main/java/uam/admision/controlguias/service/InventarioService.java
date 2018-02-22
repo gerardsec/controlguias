@@ -42,5 +42,6 @@ public class InventarioService {
     }
     public Integer buscaClaveMayor() {return repo.maxInventario();}
     public List<InventarioEntity> disponiblesVenta(){return repo.inventarioDisponibles();}
+    public InventarioEntity buscaPorId(Integer id){return repo.findOne(id);}
 
 }

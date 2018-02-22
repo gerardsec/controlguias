@@ -23,6 +23,7 @@ import uam.admision.controlguias.service.InventarioService;
 import uam.admision.controlguias.service.PedidoService;
 import uam.admision.controlguias.service.TipoguiaService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.math.BigInteger;
 import java.text.ParseException;
@@ -118,10 +119,30 @@ public class PedidoBisController {
 
     @RequestMapping(value="/prueba/addPedidoBis", params = {"addItem"})
     public String addItem(final @ModelAttribute("pedidoE") PedidoEntity pedidoE,
-                          final BindingResult bindingResult, ModelMap model) {
+                          final BindingResult bindingResult,
+                          final @ModelAttribute("itemagregar") ItempedidoEntity itemagregar) {
 
         logger.warn(" ----- Agregando item pedido");
-        pedidoE.getItempedidos().add(new ItempedidoEntity());
+        InventarioEntity inventario = repoInventario.buscaPorId(itemagregar.getIdInventario());
+        ItempedidoEntity itemNuevo = new ItempedidoEntity();
+        itemNuevo.setCantidad(itemagregar.getCantidad());
+        itemNuevo.setIdInventario(itemagregar.getIdInventario());
+        itemNuevo.setTipoGuia(inventario.getTipoGuia());
+
+        pedidoE.getItempedidos().add(itemNuevo);
+
+        return "addPedidoBis";
+    }
+
+    @RequestMapping(value="/prueba/addPedidoBis", params={"quitaItem"})
+    public String removeRow(
+            final  @ModelAttribute("pedidoE") PedidoEntity pedidoE,
+            final BindingResult bindingResult,
+            final HttpServletRequest req,
+            final @ModelAttribute("itemagregar") ItempedidoEntity itemagregar) {
+        final Integer rowId = Integer.valueOf(req.getParameter("quitaItem"));
+        pedidoE.getItempedidos().remove(rowId.intValue());
+        //seedStarter.getRows().remove(rowId.intValue());
         return "addPedidoBis";
     }
 }

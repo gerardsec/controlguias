@@ -22,6 +22,7 @@ public class InventarioEntity {
     private Integer id;
     private String claveEntrada;
     private Integer tipoGuia;
+    //private Number AGREGAR costo unitario
     private Integer cantidadInicial;
     private Integer cantidadDisponible;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

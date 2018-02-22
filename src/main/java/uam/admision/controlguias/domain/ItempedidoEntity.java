@@ -2,6 +2,8 @@ package uam.admision.controlguias.domain;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.math.BigInteger;
 import java.util.Objects;
 
@@ -42,6 +44,7 @@ public class ItempedidoEntity {
 
     @Basic
     @Column(name = "cantidad", nullable = true)
+    @Min(1)
     public Integer getCantidad() {
         return cantidad;
     }
