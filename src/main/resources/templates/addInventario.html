@@ -80,6 +80,14 @@
             </tr>
             <tr>
                 <td>
+                    <input type="text" th:field="${inventarioE.costoUnitario}" placeholder="Costo unitario"/>
+                </td>
+                <td>
+                    <p th:if="${#fields.hasErrors('costoUnitario')}" th:errors="*{costoUnitario}">Costo unitario</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <p><textarea th:field="*{observaciones}" placeholder="Observaciones"></textarea></p>
                 </td>
                 <td>

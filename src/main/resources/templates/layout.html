@@ -75,6 +75,7 @@
             <th>Fecha de entrada</th>
             <th>Pedido o compra</th>
             <th>Edición</th>
+            <th>Costo Unitario</th>
             <th>Observaciones</th>
         </tr>
         <tr th:each="listaInventario : ${todosInventario}">
@@ -87,6 +88,7 @@
             <td th:text="${listaInventario.fechaEntrada}">fecha entrada</td>
             <td th:text="${listaInventario.pedidoCompra}">Pedido o compra</td>
             <td th:text="${listaInventario.edicion}">edición</td>
+            <td th:text="${listaInventario.costoUnitario}">edición</td>
             <td th:text="${listaInventario.observaciones}">observaciones</td>
         </tr>
     </table>

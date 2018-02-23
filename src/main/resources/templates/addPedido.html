@@ -57,9 +57,7 @@
             </tr>
 
         </table>
-        <!--     <p th:text="${#date.format(*{created},'yyyy-MM-dd')}"></p>  -->
 
-        <!-- /* Tabla para los items del pediod, en renglones   */-->
         <div class="seedstarterlist">
             <table>
                 <thead>
@@ -70,6 +68,7 @@
                     <th th:text="#{pedido.items.tipoguia}">Tipo de guía</th>
                     <th th:text="#{pedido.items.id}">Clave</th>
                     <th th:text="#{pedido.items.idinventario}">Inventario</th>
+                    <th th:text="#{pedido.items.boton}">Acción</th>
 
                 </tr>
                 <tr>
@@ -77,7 +76,8 @@
                         ---
                     </td>
                     <td>
-                        <input type="text" th:field="${itemagregar.cantidad}" placeholder="Cantidad requerida"/>
+                        <input type="text" th:field="${itemagregar.cantidad}" placeholder="Cantidad requerida"
+                               maxlength="4" size="4"/>
                     </td>
                     <td>
                         ---
@@ -99,11 +99,36 @@
                         </select>
                     </td>
                     <td>
-                        <button type="submit" name="addRow" th:text="#{pedido.boton.agregaItem}">Add row</button>
+                        <button type="submit" name="addItem" th:text="#{pedido.boton.agregaItem}">Add row</button>
                     </td>
                 </tr>
-
+                <tbody>
+                <tr th:each="row,rowStat : *{itempedidos}">
+                    <td th:text="${rowStat.count}">1</td>
+                    <td>
+                        <input type="text" th:field="*{itempedidos[__${rowStat.index}__].cantidad}" maxlength="4"
+                               size="4"/>
+                    </td>
+                    <td>
+                        <input type="text" th:field="*{itempedidos[__${rowStat.index}__].costoUnitario}" maxlength="4"
+                               size="4"/>
+                    </td>
+                    <td>
+                        <input type="text" th:field="*{itempedidos[__${rowStat.index}__].tipoGuia}" size="4"/>
+                        <span th:text="${todosTiposGuia.get({pedidoE.itempedidos.tipoGuia}).nombreGuia}">tipo</span>
+                    </td>
+                    <td>
+                        <input type="text" th:field="*{itempedidos[__${rowStat.index}__].idInventario}"/>
+                    </td>
+                    <td>
+                        <button type="submit" name="quitaItem"
+                                th:value="${rowStat.index}" th:text="#{itempedido.renglon.quitar}">Remove row
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
                 </thead>
+
             </table>
         </div>
         <input type="submit" value="Agregar"/>

@@ -30,8 +30,11 @@ public class InventarioEntity {
     private Integer pedidoCompra;
     private Integer edicion;
     private String observaciones;
+    private Float costoUnitario;
     private TipoguiaEntity tipoguia;
     /*private Collection<ItempedidoEntity> itempedidosById;*/
+
+
 
     @Id
     @Column(name = "id", nullable = false)
@@ -123,6 +126,14 @@ public class InventarioEntity {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    public Float getCostoUnitario() {
+        return costoUnitario;
+    }
+
+    public void setCostoUnitario(Float costoUnitario) {
+        this.costoUnitario = costoUnitario;
     }
 
     @Override

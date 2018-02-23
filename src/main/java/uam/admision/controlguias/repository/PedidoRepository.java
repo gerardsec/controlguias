@@ -2,6 +2,7 @@ package uam.admision.controlguias.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import uam.admision.controlguias.domain.ItempedidoEntityPK;
 import uam.admision.controlguias.domain.PedidoEntity;
 
 

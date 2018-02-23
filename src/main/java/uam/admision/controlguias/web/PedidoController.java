@@ -4,33 +4,23 @@ package uam.admision.controlguias.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import uam.admision.controlguias.domain.InventarioEntity;
 import uam.admision.controlguias.domain.ItempedidoEntity;
 import uam.admision.controlguias.domain.PedidoEntity;
 import uam.admision.controlguias.domain.TipoguiaEntity;
-
-import uam.admision.controlguias.service.EstadoService;
-import uam.admision.controlguias.service.InventarioService;
-import uam.admision.controlguias.service.PedidoService;
-import uam.admision.controlguias.service.TipoguiaService;
+import uam.admision.controlguias.service.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.math.BigInteger;
 import java.text.ParseException;
-
 import java.time.LocalDate;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -54,118 +44,124 @@ public class PedidoController {
     @Autowired
     private EstadoService repoEstado;
 
+    @Autowired
+    private ItemPedidoService repoItemPedido;
 
-    @GetMapping(value = "/pedido/addPedido")
-    public ModelAndView addPedido(ModelMap model) {
-        logger.warn("Entrando a getmapping");
-
-        PedidoEntity pedidoInicial = new PedidoEntity();
-        pedidoInicial.setEstado(1);
-        ItempedidoEntity itemAgregar = new ItempedidoEntity();
-
+    @ModelAttribute("listaTiposGuia")
+    public Map<Integer, String> generaListaTiposGuia() {
         Map<Integer, String> listaTiposGuia = repoGuia.guiaTipoNombre();
+        return listaTiposGuia;
+    }
+
+    @ModelAttribute("listaEstados")
+    public Map<Integer, String> generaListaEstados() {
         Map<Integer, String> listaEstados = repoEstado.listaEstados();
+        return listaEstados;
+    }
 
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("listaTiposGuia", listaTiposGuia);
-        modelAndView.addObject("listaEstados", listaEstados);
-
-        if (model.isEmpty()) {
-            logger.warn("modelo vacío ....Inicio de pedidos");
-
-            modelAndView.addObject("pedidoE", pedidoInicial);
-
-        }
-
+    @ModelAttribute("todosTiposGuia")
+    public List<TipoguiaEntity> generatodosTiposGuia() {
         List<TipoguiaEntity> todosTiposGuia = repoGuia.listaTodo();
+        return todosTiposGuia;
+    }
+
+    @ModelAttribute("listaInventarioDisponible")
+    public List<InventarioEntity> generalistaInventarioDisponible() {
         List<InventarioEntity> listaInventarioDisponible = repoInventario.listaTodo();
+        return listaInventarioDisponible;
+    }
+
+    @ModelAttribute("todosPedido")
+    public List<PedidoEntity> todosPedido() {
         List<PedidoEntity> todosPedido = repoPedido.listaTodo();
-
-        modelAndView.addObject("todosTiposGuia", todosTiposGuia);
-        modelAndView.addObject("todosPedido", todosPedido);
-        modelAndView.addObject("itemagregar", itemAgregar);
-        modelAndView.addObject("listaInventarioDisponible", listaInventarioDisponible);
-        modelAndView.setViewName("addPedido");
-        return modelAndView;
+        return todosPedido;
     }
 
 
-    @PostMapping(value = "/pedido/addPedido")
-    public ModelAndView addPedido(@Valid PedidoEntity pedidoE, BindingResult result,
-                                  ItempedidoEntity itemagregar,
-                                  RedirectAttributes redirectAttributes,
-                                  @RequestParam Map<String, String> paramMap) {
-        logger.warn("Entrando a postmapping");
+    @Bean
+    public ViewResolver getViewResolver() {
+        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+        resolver.setPrefix("/");
+        resolver.setSuffix(".html");
+        //resolver.setViewClass(JstlView.class);
+        return resolver;
+    }
 
+    @RequestMapping(value = "/pedido/addPedido")
+    public String muestraPedidos(final @ModelAttribute("pedidoE") PedidoEntity pedidoE,
+                                 ModelMap model) {
+        ItempedidoEntity itemagregar = new ItempedidoEntity();
+        model.addAttribute("itemagregar", itemagregar);
+        pedidoE.setEstado(1);
+        pedidoE.setFechaSolicita(LocalDate.now());
+        return "addPedido";
+    }
 
-
-        ModelAndView formaAlta = new ModelAndView();
-        Integer maxIdPedido = repoPedido.buscaClaveMayor() + 1;
-        logger.warn("Inventario: clave_mayor " + maxIdPedido.toString());
-
-        if (paramMap.containsKey("addRow")){
-
-            logger.warn("----> Solicitando agregar renglón");
-            //redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.inventarioE", result);
-            redirectAttributes.addFlashAttribute("inventarioE", pedidoE);
-            pedidoE.getItempedidos().add(new ItempedidoEntity());
-
-            return new ModelAndView("redirect:/pedido/addPedido");
+    @RequestMapping(value = "/pedido/addPedido", params = {"save"})
+    public String guardaPedidoE(
+            final @Valid @ModelAttribute("pedidoE") PedidoEntity pedidoE, final BindingResult bindingResult,
+            final ModelMap model) {
+        if (bindingResult.hasErrors()) {
+            return "addPedido";
         }
+        try {
+            this.repoPedido.insertData(pedidoE);
+        } catch (ParseException e) {
+            logger.warn("Error pedido parse");
+        }
+        model.clear();
+        return "redirect:/addPedido";
+    }
 
-        /*if (paramMap.containsKey("removeRow")){
-            final PedidoEntity seedStarter, final BindingResult bindingResult,
-            final HttpServletRequest req) {
-                final Integer rowId = Integer.valueOf(req.getParameter("removeRow"));
-                seedStarter.getItempedidos().remove(rowId.intValue());
-                return "/pedido/addPedido";
-        }*/
+    @RequestMapping(value = "/pedido/addPedido", params = {"addItem"})
+    public String addItem(final @ModelAttribute("pedidoE") PedidoEntity pedidoE,
+                          final BindingResult bindingResult,
+                          final @ModelAttribute("itemagregar") ItempedidoEntity itemagregar) {
 
-        if (result.hasErrors()) {
-            //notifyService.addErrorMessage("Errores en la forma de alta de libros");
-            logger.warn("Pedido: Errores en la forma de alta ");
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.pedidoE", result);
-            redirectAttributes.addFlashAttribute("pedidoE", pedidoE);
-            redirectAttributes.addFlashAttribute("itemagregar", itemagregar);
+        logger.warn(" ----- Agregando item pedido"+itemagregar.getIdInventario().toString());
 
-            return new ModelAndView("redirect:/pedido/addPedido");
+        /* Se actualiza el itemagregar con los datos del inventario y se agrega al pedido*/
 
+        InventarioEntity inventario = repoInventario.buscaPorId(itemagregar.getIdInventario());
+
+        if (inventario == null) {
+            logger.warn("Inventario nulo");
+        }
+        else {
+            logger.warn("inventario no es null");
+        }
+        ItempedidoEntity itemNuevo = new ItempedidoEntity();
+        logger.warn("después nuevo item");
+        if (inventario.getCantidadDisponible() >= itemagregar.getCantidad()) {
+            itemNuevo.setCantidad(itemagregar.getCantidad());
         } else {
-            System.out.print("datos recibidos .....iniciando");
-
-            System.out.print("datos recibidos .....terminando");
-
-            try {
-                maxIdPedido = repoPedido.buscaClaveMayor() + 1;
-                pedidoE.setNumPedido(maxIdPedido);
-                LocalDate hoyFecha = LocalDate.now();
-                pedidoE.setFechaSolicita(hoyFecha);
-                pedidoE.setFechaEnvio(null);
-                pedidoE.setFechaRecibido(null);
-                pedidoE.setFechaSurtido(null);
-
-                //items
-                ItempedidoEntity itempedidoEntity = new ItempedidoEntity();
-                itempedidoEntity.setNumPedido(pedidoE.getNumPedido());
-                itempedidoEntity.setItem(1);
-                itempedidoEntity.setCantidad(1000);
-                itempedidoEntity.setCostoUnitario(BigInteger.valueOf(10));
-                itempedidoEntity.setTipoGuia(1);
-                itempedidoEntity.setIdInventario(26);
-                itempedidoEntity.setId(1);
-                pedidoE.getItempedidos().add(itempedidoEntity);
-
-                repoPedido.insertData(pedidoE);
-                //  logger.warn(pedidoE.getFechaEntrada().toString());
-            } catch (ParseException e) {
-                logger.warn("Pedido: Error en parse datos");
-                e.printStackTrace();
-            }
-
+            itemNuevo.setCantidad(inventario.getCantidadDisponible());
         }
+        logger.debug("después if");
+        itemNuevo.setIdInventario(itemagregar.getIdInventario());
+        itemNuevo.setCostoUnitario(inventario.getCostoUnitario());
+        itemNuevo.setTipoGuia(inventario.getTipoGuia());
 
-        return new ModelAndView("redirect:/pedido/addPedido");
+        //Integer itempedidoMayor = repoItemPedido.buscaClaveMayor();
+        logger.debug("antes consultar itempedido");
+        //List<ItempedidoEntity> itemstodos = repoItemPedido.listaTodo();
+        itemNuevo.setId(10);
+        itemNuevo.setIdInventario(itemagregar.getIdInventario());
+
+        pedidoE.getItempedidos().add(itemNuevo);
+
+        return "addPedido";
     }
 
-
+    @RequestMapping(value = "/pedido/addPedido", params = {"quitaItem"})
+    public String removeRow(
+            final @ModelAttribute("pedidoE") PedidoEntity pedidoE,
+            final BindingResult bindingResult,
+            final HttpServletRequest req,
+            final @ModelAttribute("itemagregar") ItempedidoEntity itemagregar) {
+        final Integer rowId = Integer.valueOf(req.getParameter("quitaItem"));
+        pedidoE.getItempedidos().remove(rowId.intValue());
+        //seedStarter.getRows().remove(rowId.intValue());
+        return "addPedido";
+    }
 }

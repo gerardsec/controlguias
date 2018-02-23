@@ -14,7 +14,7 @@ public class ItempedidoEntity {
     private Integer numPedido;
     private Integer item;
     private Integer cantidad;
-    private BigInteger costoUnitario;
+    private Float costoUnitario;
     private Integer tipoGuia;
     private Integer id;
     private Integer idInventario;
@@ -55,11 +55,11 @@ public class ItempedidoEntity {
 
     @Basic
     @Column(name = "costo_unitario", nullable = false, precision = 0)
-    public BigInteger getCostoUnitario() {
+    public Float getCostoUnitario() {
         return costoUnitario;
     }
 
-    public void setCostoUnitario(BigInteger costoUnitario) {
+    public void setCostoUnitario(Float costoUnitario) {
         this.costoUnitario = costoUnitario;
     }
 
