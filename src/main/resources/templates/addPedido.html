@@ -114,8 +114,8 @@
                                size="4"/>
                     </td>
                     <td>
-                        <input type="text" th:field="*{itempedidos[__${rowStat.index}__].tipoGuia}" size="4"/>
-                        <span th:text="${todosTiposGuia.get({pedidoE.itempedidos.tipoGuia}).nombreGuia}">tipo</span>
+                        <input type="text" th:field="*{itempedidos[__${rowStat.index}__].nombreGuiaTem}" size="4"/>
+                       <!-- <span th:text="${todosTiposGuia.get(${itempedidos[__${rowStat.index}__].tipoGuia})}">tipo</span> -->
                     </td>
                     <td>
                         <input type="text" th:field="*{itempedidos[__${rowStat.index}__].idInventario}"/>
@@ -128,10 +128,9 @@
                 </tr>
                 </tbody>
                 </thead>
-
             </table>
         </div>
-        <input type="submit" value="Agregar"/>
+        <input type="submit" name="savePedido" value="Realizar pedido"/>
     </form>
 </div>
 <footer th:replace="layout :: site-footer"/>

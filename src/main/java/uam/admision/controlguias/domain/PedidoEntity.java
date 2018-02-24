@@ -140,6 +140,7 @@ public class PedidoEntity {
         this.estado = estado;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

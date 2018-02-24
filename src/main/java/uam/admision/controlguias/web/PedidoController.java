@@ -97,20 +97,39 @@ public class PedidoController {
         return "addPedido";
     }
 
-    @RequestMapping(value = "/pedido/addPedido", params = {"save"})
+    @RequestMapping(value = "/pedido/addPedido", params = {"savePedido"})
     public String guardaPedidoE(
             final @Valid @ModelAttribute("pedidoE") PedidoEntity pedidoE, final BindingResult bindingResult,
-            final ModelMap model) {
+            final ModelMap model,
+            final @ModelAttribute("itemagregar") ItempedidoEntity itemagregar) {
+        logger.warn("Solicitando guardar pedido");
         if (bindingResult.hasErrors()) {
             return "addPedido";
         }
+
+        //Definiendo la fecha de pedido
+        pedidoE.setFechaSolicita(LocalDate.now());
+        //Determinando la llave: num_pedido
+        Integer numPedidoActual = repoPedido.buscaClaveMayor() + 1;
+        pedidoE.setNumPedido(numPedidoActual);
+
+        logger.warn("itemes loop");
+///ERROR en esta parte....
+        System.out.println(pedidoE.getItempedidos().toString());
+        //definiendo llaves en itemspedido
+        for (int i = 0; i < pedidoE.getItempedidos().size(); i++) {
+            pedidoE.getItempedidos().get(i).setNumPedido(pedidoE.getNumPedido());
+            pedidoE.getItempedidos().get(i).setItem(i);
+            System.out.println(pedidoE.getItempedidos().get(i).toString());
+        }
+
         try {
             this.repoPedido.insertData(pedidoE);
         } catch (ParseException e) {
             logger.warn("Error pedido parse");
         }
         model.clear();
-        return "redirect:/addPedido";
+        return "redirect:/pedido/addPedido";
     }
 
     @RequestMapping(value = "/pedido/addPedido", params = {"addItem"})
@@ -118,7 +137,7 @@ public class PedidoController {
                           final BindingResult bindingResult,
                           final @ModelAttribute("itemagregar") ItempedidoEntity itemagregar) {
 
-        logger.warn(" ----- Agregando item pedido"+itemagregar.getIdInventario().toString());
+        logger.warn(" ----- Agregando item pedido" + itemagregar.getIdInventario().toString());
 
         /* Se actualiza el itemagregar con los datos del inventario y se agrega al pedido*/
 
@@ -126,8 +145,7 @@ public class PedidoController {
 
         if (inventario == null) {
             logger.warn("Inventario nulo");
-        }
-        else {
+        } else {
             logger.warn("inventario no es null");
         }
         ItempedidoEntity itemNuevo = new ItempedidoEntity();
@@ -141,6 +159,11 @@ public class PedidoController {
         itemNuevo.setIdInventario(itemagregar.getIdInventario());
         itemNuevo.setCostoUnitario(inventario.getCostoUnitario());
         itemNuevo.setTipoGuia(inventario.getTipoGuia());
+        logger.warn("tipo guia" + inventario.getTipoGuia().toString());
+
+        Map<Integer, String> lTiposGuia = repoGuia.guiaTipoNombre();
+        itemNuevo.setNombreGuiaTem(lTiposGuia.get(inventario.getTipoGuia()));
+
 
         //Integer itempedidoMayor = repoItemPedido.buscaClaveMayor();
         logger.debug("antes consultar itempedido");

@@ -2,9 +2,7 @@ package uam.admision.controlguias.domain;
 
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.math.BigInteger;
 import java.util.Objects;
 
 @Entity
@@ -18,8 +16,8 @@ public class ItempedidoEntity {
     private Integer tipoGuia;
     private Integer id;
     private Integer idInventario;
-    //ORIGINAL private PedidoEntity pedidoByNumPedido;//
     private PedidoEntity pedido;
+    @Transient private String nombreGuiaTem;
     /*private InventarioEntity inventarioByIdInventario;*/
 
     @Id
@@ -93,6 +91,16 @@ public class ItempedidoEntity {
         this.idInventario = idInventario;
     }
 
+    @Transient
+    @Access(AccessType.PROPERTY)
+    public String getNombreGuiaTem() {
+        return nombreGuiaTem;
+    }
+    @Transient
+    public void setNombreGuiaTem(String nombreGuiaTem) {
+        this.nombreGuiaTem = nombreGuiaTem;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -122,16 +130,6 @@ public class ItempedidoEntity {
     public void setPedido(PedidoEntity pedido) {
         this.pedido = pedido;
     }
-    //ORIGINAL//
-    /*@ManyToOne
-    @JoinColumn(name = "num_pedido", referencedColumnName = "num_pedido", nullable = false)
-    public PedidoEntity getPedidoByNumPedido() {
-        return pedidoByNumPedido;
-    }
-
-    public void setPedidoByNumPedido(PedidoEntity pedidoByNumPedido) {
-        this.pedidoByNumPedido = pedidoByNumPedido;
-    }*/
 
     /*@ManyToOne
     @JoinColumn(name = "id_inventario", referencedColumnName = "id", nullable = false)
