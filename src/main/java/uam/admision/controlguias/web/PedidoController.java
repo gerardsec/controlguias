@@ -119,8 +119,8 @@ public class PedidoController {
         //definiendo llaves en itemspedido
         for (int i = 0; i < pedidoE.getItempedidos().size(); i++) {
             pedidoE.getItempedidos().get(i).setNumPedido(pedidoE.getNumPedido());
-           // pedidoE.getItempedidos().get(i).setItem(i+1);
-            System.out.println(pedidoE.getItempedidos().get(i).toString());
+            pedidoE.getItempedidos().get(i).setItem(i + 1);
+            /*System.out.println(pedidoE.getItempedidos().get(i).toString());
             System.out.println("itemes:");
             System.out.println("num pedido--"+pedidoE.getItempedidos().get(i).getNumPedido());
             System.out.println("num id--"+pedidoE.getItempedidos().get(i).getItem());
@@ -128,10 +128,10 @@ public class PedidoController {
             System.out.println("costo uitario--"+pedidoE.getItempedidos().get(i).getCostoUnitario());
             System.out.println("Tipo guía id--"+pedidoE.getItempedidos().get(i).getTipoGuia());
             System.out.println("id--"+pedidoE.getItempedidos().get(i).getId());
-            System.out.println("id Inventario--"+pedidoE.getItempedidos().get(i).getIdInventario());
+            System.out.println("id Inventario--"+pedidoE.getItempedidos().get(i).getIdInventario());*/
         }
 
-        logger.warn("-----despliega datos a insertar");
+        /*logger.warn("-----despliega datos a insertar");
         logger.warn("-----pedido");
         System.out.println(pedidoE.getNumPedido().toString());
         System.out.println(pedidoE.getSolicitante().toString());
@@ -148,7 +148,7 @@ public class PedidoController {
 
 
         logger.debug("-----termina despliega datos a insertar");
-
+*/
         try {
             this.repoPedido.insertData(pedidoE);
         } catch (ParseException e) {
@@ -174,24 +174,21 @@ public class PedidoController {
         } else {
             logger.warn("inventario no es null");
         }
-       // ItempedidoEntity itemNuevo = new ItempedidoEntity();
+        // ItempedidoEntity itemNuevo = new ItempedidoEntity();
         logger.warn("después nuevo item");
+        //verifica disponibilidad de guias en inventario
         if (inventario.getCantidadDisponible() < itemagregar.getCantidad()) {
             itemagregar.setCantidad(inventario.getCantidadDisponible());
         }
         logger.debug("después if");
-        //itemagregar.setIdInventario(itemagregar.getIdInventario());
         itemagregar.setCostoUnitario(inventario.getCostoUnitario());
         itemagregar.setTipoGuia(inventario.getTipoGuia());
-        itemagregar.setItem(pedidoE.getItempedidos().size()+1);
-        logger.warn("tipo guia" + itemagregar.getTipoGuia()+" item:"+itemagregar.getItem());
-
+        itemagregar.setItem(pedidoE.getItempedidos().size() + 1);
+        logger.warn("tipo guia" + itemagregar.getTipoGuia() + " item:" + itemagregar.getItem());
         Map<Integer, String> lTiposGuia = repoGuia.guiaTipoNombre();
-        itemagregar.setNombreGuiaTem(lTiposGuia.get(inventario.getTipoGuia()));
+        itemagregar.setNombreGuiaTem(lTiposGuia.get(inventario.getTipoGuia()) + ". Edición " + inventario.getEdicion());
         logger.debug("antes consultar itempedido");
         itemagregar.setId(10);
-        //itemagregar.setIdInventario(itemagregar.getIdInventario());
-
 
         pedidoE.getItempedidos().add(itemagregar);
 
@@ -206,7 +203,7 @@ public class PedidoController {
             final @ModelAttribute("itemagregar") ItempedidoEntity itemagregar) {
         final Integer rowId = Integer.valueOf(req.getParameter("quitaItem"));
         pedidoE.getItempedidos().remove(rowId.intValue());
-        //seedStarter.getRows().remove(rowId.intValue());
+
         return "addPedido";
     }
 }

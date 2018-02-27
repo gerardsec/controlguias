@@ -7,6 +7,7 @@ package uam.admision.controlguias.domain;
 */
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 import uam.admision.controlguias.utils.JsonDateSerializer;
 import uam.admision.controlguias.utils.LocalDateTimeConverter;
@@ -18,6 +19,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "inventario", schema = "public", catalog = "controlguias")
+@DynamicUpdate
 public class InventarioEntity {
     private Integer id;
     private String claveEntrada;
