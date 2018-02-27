@@ -16,7 +16,7 @@
         <table>
             <tr>
                 <td>
-                    <input type="text" th:field="${tipoGuiaE.tipoGuia}" placeholder="Tipo de guía (número entero)"/>
+                    <input type="text" th:field="${tipoGuiaE.tipoGuia}" placeholder="Tipo de guía (número entero)" th:required="required"/>
 
                 </td>
                 <td>
@@ -25,7 +25,7 @@
             </tr>
             <tr>
                 <td>
-                    <input type="text" th:field="${tipoGuiaE.nombreGuia}" placeholder="Nombre de la guía"/>
+                    <input type="text" th:field="${tipoGuiaE.nombreGuia}" placeholder="Nombre de la guía" th:required="required"/>
                 </td>
                 <td>
                     <p th:if="${#fields.hasErrors('nombreGuia')}" th:errors="*{nombreGuia}">Nombre incorrecto</p>
@@ -41,7 +41,7 @@
             </tr>
             <tr>
                 <td>
-                    <input type="text" th:field="${tipoGuiaE.isbn}" placeholder="ISBN"/>
+                    <input type="text" th:field="${tipoGuiaE.isbn}" placeholder="ISBN" th:required="required"/>
                 </td>
                 <td>
                     <p th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}">isbn incorrecto</p>
@@ -61,7 +61,7 @@
         </table>
 
         <!--     <p th:text="${#date.format(*{created},'yyyy-MM-dd')}"></p>  -->
-        <input type="submit" value="Agregar"/>
+        <input type="submit" name="saveGuia" value="Agregar"/>
     </form>
 </div>
 <footer th:replace="layout :: site-footer"/>

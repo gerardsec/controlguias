@@ -34,32 +34,17 @@ import java.util.Map;
 public class TipoGuiaController {
 
     private static final Logger logger = LoggerFactory.getLogger(TipoGuiaController.class);
-
-    /*@Autowired
-    private TipoguiaRepository repo;*/
-
-
+    
     @Autowired
     private NotificationService notifyService;
 
     @Autowired
     private TipoguiaService repoGuia;
 
-    /*@ModelAttribute("todosTiposGuia")
-    public List<TipoguiaEntity>  generaCatalogoGuias(){
-        return this.repoGuia.listaTodo();
-    }*/
-
-    @Bean
-    public LayoutDialect layoutDialect() {
-        return new LayoutDialect();
-    }
-
-    private TemplateEngine templateEngine(ITemplateResolver templateResolver) {
-        SpringTemplateEngine engine = new SpringTemplateEngine();
-        engine.addDialect(new Java8TimeDialect());
-        engine.setTemplateResolver(templateResolver);
-        return engine;
+    @ModelAttribute("todosTiposGuia")
+    public List<TipoguiaEntity> generatodosTiposGuia() {
+        List<TipoguiaEntity> todosTiposGuia = repoGuia.listaTodo();
+        return todosTiposGuia;
     }
 
     @GetMapping(value = "/index")
@@ -69,57 +54,32 @@ public class TipoGuiaController {
     }
 
     @GetMapping(value = "/guia/addTipoGuia")
-    public ModelAndView addTipoGuia(ModelMap model) {
-        TipoguiaEntity tipoGuiaInicial = new TipoguiaEntity();
-
-        ModelAndView modelAndView = new ModelAndView();
-        if (model.isEmpty()) {
-            logger.warn("modelo vacío ....");
-
-            modelAndView.addObject("tipoGuiaE", tipoGuiaInicial);
-
-        }
-
-        List<TipoguiaEntity> todosTiposGuia = repoGuia.listaTodo();
-        modelAndView.addObject("todosTiposGuia", todosTiposGuia);
-        modelAndView.setViewName("addTipoGuia");
-        return modelAndView;
+    public String addTipoGuia(final @ModelAttribute("tipoGuiaE") TipoguiaEntity tipoGuiaE,
+                              ModelMap model) {
+        return "addTipoGuia";
     }
 
-    @PostMapping(value = "/guia/addTipoGuia")
-    public ModelAndView addTipoGuia(@Valid TipoguiaEntity tipoGuiaE, BindingResult result,
-                                    RedirectAttributes redirectAttributes) {
-        ModelAndView formaAlta = new ModelAndView();
-
-
+    @PostMapping(value = "/guia/addTipoGuia", params = {"saveGuia"})
+    public String addTipoGuia(
+            final @Valid @ModelAttribute("tipoGuiaE") TipoguiaEntity tipoGuiaE,
+            final BindingResult result,
+            final ModelMap model) {
         if (result.hasErrors()) {
             //notifyService.addErrorMessage("Errores en la forma de alta de libros");
             logger.warn("Errores en la forma de alta de libros");
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.tipoGuiaE", result);
-            redirectAttributes.addFlashAttribute("tipoGuiaE", tipoGuiaE);
 
-            return new ModelAndView("redirect:/guia/addTipoGuia");
-
-        } else {
-            System.out.print("datos recibidos .....iniciando");
-            System.out.print(tipoGuiaE.getIsbn());
-            System.out.print(tipoGuiaE.getNombreGuia());
-            System.out.print("datos recibidos .....terminando");
-
-            try {
-                repoGuia.insertData(tipoGuiaE);
-            } catch (ParseException e) {
-                logger.warn("Error en parse datos");
-                e.printStackTrace();
-            }
+            return "addTipoGuia";
         }
+        System.out.print(tipoGuiaE.getNombreGuia());
+        System.out.print("datos recibidos .....terminando");
 
-        List<TipoguiaEntity> todosTiposGuia = repoGuia.listaTodo();
-        formaAlta.addObject("todosTiposGuia", todosTiposGuia);
-        TipoguiaEntity tipoGuiaInicial = new TipoguiaEntity();
-        formaAlta.setViewName("addTipoGuia");
-        formaAlta.addObject("tipoGuiaE", tipoGuiaInicial);
-        return formaAlta;
+        try {
+            repoGuia.insertData(tipoGuiaE);
+        } catch (ParseException e) {
+            logger.warn("Error en parse datos");
+            e.printStackTrace();
+        }
+        model.clear();
+        return "redirect:/guia/addTipoGuia";
     }
-
 }
