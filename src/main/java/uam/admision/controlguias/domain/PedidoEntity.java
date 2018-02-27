@@ -1,6 +1,5 @@
 package uam.admision.controlguias.domain;
 
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.format.annotation.DateTimeFormat;
 import uam.admision.controlguias.utils.JsonDateSerializer;
@@ -21,30 +20,6 @@ import java.util.Objects;
 @Table(name = "pedido", schema = "public", catalog = "controlguias")
 public class PedidoEntity {
     private Integer numPedido;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PedidoEntity that = (PedidoEntity) o;
-        return Objects.equals(getNumPedido(), that.getNumPedido()) &&
-                Objects.equals(getSolicitante(), that.getSolicitante()) &&
-                Objects.equals(getAreaSolicita(), that.getAreaSolicita()) &&
-                Objects.equals(getUnidadSolicita(), that.getUnidadSolicita()) &&
-                Objects.equals(getFechaSolicita(), that.getFechaSolicita()) &&
-                Objects.equals(getFechaSurtido(), that.getFechaSurtido()) &&
-                Objects.equals(getFechaEnvio(), that.getFechaEnvio()) &&
-                Objects.equals(getFechaRecibido(), that.getFechaRecibido()) &&
-                Objects.equals(getEstado(), that.getEstado()) &&
-                Objects.equals(getItempedidos(), that.getItempedidos());
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(getNumPedido(), getSolicitante(), getAreaSolicita(), getUnidadSolicita(), getFechaSolicita(), getFechaSurtido(), getFechaEnvio(), getFechaRecibido(), getEstado(), getItempedidos());
-    }
-
     private String solicitante;
     private String areaSolicita;
     private String unidadSolicita;
@@ -58,7 +33,7 @@ public class PedidoEntity {
     private LocalDate fechaRecibido;
     private Integer estado;
     //ORIGINAL private Collection<ItempedidoEntity> itempedidosByNumPedido; //
-    //ORIGINAL private Collection<ItempedidoEntity> itempedidos; //
+    private String detalles;
     private List itempedidos = new ArrayList<>();
 
     @Id
@@ -164,6 +139,14 @@ public class PedidoEntity {
         this.estado = estado;
     }
 
+    public String getDetalles() {
+        return detalles;
+    }
+
+    public void setDetalles(String detalles) {
+        this.detalles = detalles;
+    }
+
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     public List<ItempedidoEntity> getItempedidos() {
@@ -173,13 +156,29 @@ public class PedidoEntity {
     public void setItempedidos(List<ItempedidoEntity> itempedidos) {
         this.itempedidos = itempedidos;
     }
-    //ORIGINAL//
-    /*@OneToMany(mappedBy = "pedidoByNumPedido")
-    public Collection<ItempedidoEntity> getItempedidosByNumPedido() {
-        return itempedidosByNumPedido;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PedidoEntity that = (PedidoEntity) o;
+        return Objects.equals(getNumPedido(), that.getNumPedido()) &&
+                Objects.equals(getSolicitante(), that.getSolicitante()) &&
+                Objects.equals(getAreaSolicita(), that.getAreaSolicita()) &&
+                Objects.equals(getUnidadSolicita(), that.getUnidadSolicita()) &&
+                Objects.equals(getFechaSolicita(), that.getFechaSolicita()) &&
+                Objects.equals(getFechaSurtido(), that.getFechaSurtido()) &&
+                Objects.equals(getFechaEnvio(), that.getFechaEnvio()) &&
+                Objects.equals(getFechaRecibido(), that.getFechaRecibido()) &&
+                Objects.equals(getEstado(), that.getEstado()) &&
+                Objects.equals(getDetalles(), that.getDetalles()) &&
+                Objects.equals(getItempedidos(), that.getItempedidos());
     }
 
-    public void setItempedidosByNumPedido(Collection<ItempedidoEntity> itempedidosByNumPedido) {
-        this.itempedidosByNumPedido = itempedidosByNumPedido;
-    }*/
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getNumPedido(), getSolicitante(), getAreaSolicita(), getUnidadSolicita(), getFechaSolicita(), getFechaSurtido(), getFechaEnvio(), getFechaRecibido(), getEstado(), getDetalles(), getItempedidos());
+    }
+
 }

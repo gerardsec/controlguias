@@ -1,12 +1,8 @@
 package uam.admision.controlguias.domain;
 
-/*@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-@JsonSerialize(using = JsonDateSerializer.class)
-    @Convert(converter = LocalDateTimeConverter.class)
-    LocalDate
-*/
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 import uam.admision.controlguias.utils.JsonDateSerializer;
 import uam.admision.controlguias.utils.LocalDateTimeConverter;
@@ -17,6 +13,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "User", schema = "public", catalog = "controlguias")
+@DynamicUpdate
 public class UserEntity {
     private Long id;
     private String username;
@@ -26,6 +23,12 @@ public class UserEntity {
     private Integer blocked;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate timeBlocked;
+    private String email;
+    private Integer group;
+    private String area;
+    private String unidad;
+    private String telefono;
+    private String ubicacion;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -99,23 +102,91 @@ public class UserEntity {
         this.timeBlocked = timeBlocked;
     }
 
+    @Basic
+    @Column(name = "mail", nullable = false, length = 40)
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Basic
+    @Column(name = "group", nullable = false)
+    public Integer getGroup() {
+        return group;
+    }
+
+    public void setGroup(Integer group) {
+        this.group = group;
+    }
+
+    @Basic
+    @Column(name = "area", nullable = false, length = 40)
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    @Basic
+    @Column(name = "unidad", nullable = false, length = 40)
+    public String getUnidad() {
+        return unidad;
+    }
+
+    public void setUnidad(String unidad) {
+        this.unidad = unidad;
+    }
+
+    @Basic
+    @Column(name = "telefono", nullable = false, length = 20)
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    @Basic
+    @Column(name = "ubicacion", nullable = false, length = 80)
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserEntity that = (UserEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(username, that.username) &&
-                Objects.equals(passwordHash, that.passwordHash) &&
-                Objects.equals(fullName, that.fullName) &&
-                Objects.equals(status, that.status) &&
-                Objects.equals(blocked, that.blocked) &&
-                Objects.equals(timeBlocked, that.timeBlocked);
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getUsername(), that.getUsername()) &&
+                Objects.equals(getPasswordHash(), that.getPasswordHash()) &&
+                Objects.equals(getFullName(), that.getFullName()) &&
+                Objects.equals(getStatus(), that.getStatus()) &&
+                Objects.equals(getBlocked(), that.getBlocked()) &&
+                Objects.equals(getTimeBlocked(), that.getTimeBlocked()) &&
+                Objects.equals(getEmail(), that.getEmail()) &&
+                Objects.equals(getGroup(), that.getGroup()) &&
+                Objects.equals(getArea(), that.getArea()) &&
+                Objects.equals(getUnidad(), that.getUnidad()) &&
+                Objects.equals(getTelefono(), that.getTelefono()) &&
+                Objects.equals(getUbicacion(), that.getUbicacion());
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, username, passwordHash, fullName, status, blocked, timeBlocked);
+        return Objects.hash(getId(), getUsername(), getPasswordHash(), getFullName(), getStatus(), getBlocked(), getTimeBlocked(), getEmail(), getGroup(), getArea(), getUnidad(), getTelefono(), getUbicacion());
     }
+
+
 }

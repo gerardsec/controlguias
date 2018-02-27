@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import uam.admision.controlguias.domain.PedidoEntity;
 import uam.admision.controlguias.repository.PedidoRepository;
 
@@ -31,7 +33,9 @@ public class PedidoService {
         log.warn(">Pedido: Done.");
     }
 
-    public List<PedidoEntity> listaTodo() {return repo.findAll(); }
+    public List<PedidoEntity> listaTodo() {
+        return repo.findAll();
+    }
 
     public List<PedidoEntity> queryagusto(String word) {
         return repo.findByCustomQuery(word);
@@ -43,6 +47,24 @@ public class PedidoService {
 
     public List<PedidoEntity> pedidosPendientes() {
         return repo.pedidosPendientes();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW, noRollbackFor = PedidoTransactionException.class)
+    public void realizaPedido(PedidoEntity pedidoEntity) throws PedidoTransactionException {
+
+        for (int i = 0; i < pedidoEntity.getItempedidos().size(); i++) {
+            pedidoEntity.getItempedidos().get(i).setNumPedido(pedidoEntity.getNumPedido());
+            pedidoEntity.getItempedidos().get(i).setItem(i + 1);}
+
+            try {
+                log.warn("insertando pedido transaction");
+                this.insertData(pedidoEntity);
+            } catch (ParseException e) {
+                log.warn("error transaction pedido");
+                e.printStackTrace();
+            }
+
+
     }
 
 }

@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import uam.admision.controlguias.domain.ItempedidoEntity;
 import uam.admision.controlguias.domain.PedidoEntity;
 import uam.admision.controlguias.domain.TipoguiaEntity;
 import uam.admision.controlguias.service.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.ParseException;
@@ -84,24 +87,28 @@ public class PedidoController {
         if (bindingResult.hasErrors()) {
             return "addPedido";
         }
-//Definiendo la fecha de pedido
+        //verifica que haya items en el pedido
+        if (pedidoE.getItempedidos().size() == 0) {
+            model.addAttribute("errorMessage", "Pedido vacío, sin artículos");
+            return "addPedido";
+        }
+
+        //Definiendo la fecha de pedido
         pedidoE.setFechaSolicita(LocalDate.now());
         //Determinando la llave: num_pedido
         Integer numPedidoActual = repoPedido.buscaClaveMayor() + 1;
         pedidoE.setNumPedido(numPedidoActual);
 
         logger.warn("itemes loop");
-
-        System.out.println(pedidoE.getItempedidos().toString());
-        //definiendo llaves en itemspedido
-        for (int i = 0; i < pedidoE.getItempedidos().size(); i++) {
-            pedidoE.getItempedidos().get(i).setNumPedido(pedidoE.getNumPedido());
-            pedidoE.getItempedidos().get(i).setItem(i + 1);
-        }
+        //ejecutando transaction guardar pedido
         try {
-            this.repoPedido.insertData(pedidoE);
-        } catch (ParseException e) {
-            logger.warn("Error pedido parse");
+            logger.warn("inicia pedido controller");
+            repoPedido.realizaPedido(pedidoE);
+        } catch (PedidoTransactionException e) {
+            e.printStackTrace();
+            model.addAttribute("errorMessage", "Error:" + e.getMessage());
+            logger.warn("error pedido controller...return addPedido");
+            return "addPedido";
         }
         model.clear();
         return "redirect:/pedido/addPedido";
@@ -151,4 +158,6 @@ public class PedidoController {
 
         return "addPedido";
     }
+
+
 }
