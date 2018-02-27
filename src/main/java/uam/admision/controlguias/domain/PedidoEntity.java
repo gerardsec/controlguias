@@ -21,6 +21,30 @@ import java.util.Objects;
 @Table(name = "pedido", schema = "public", catalog = "controlguias")
 public class PedidoEntity {
     private Integer numPedido;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PedidoEntity that = (PedidoEntity) o;
+        return Objects.equals(getNumPedido(), that.getNumPedido()) &&
+                Objects.equals(getSolicitante(), that.getSolicitante()) &&
+                Objects.equals(getAreaSolicita(), that.getAreaSolicita()) &&
+                Objects.equals(getUnidadSolicita(), that.getUnidadSolicita()) &&
+                Objects.equals(getFechaSolicita(), that.getFechaSolicita()) &&
+                Objects.equals(getFechaSurtido(), that.getFechaSurtido()) &&
+                Objects.equals(getFechaEnvio(), that.getFechaEnvio()) &&
+                Objects.equals(getFechaRecibido(), that.getFechaRecibido()) &&
+                Objects.equals(getEstado(), that.getEstado()) &&
+                Objects.equals(getItempedidos(), that.getItempedidos());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getNumPedido(), getSolicitante(), getAreaSolicita(), getUnidadSolicita(), getFechaSolicita(), getFechaSurtido(), getFechaEnvio(), getFechaRecibido(), getEstado(), getItempedidos());
+    }
+
     private String solicitante;
     private String areaSolicita;
     private String unidadSolicita;
@@ -140,28 +164,6 @@ public class PedidoEntity {
         this.estado = estado;
     }
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PedidoEntity that = (PedidoEntity) o;
-        return Objects.equals(numPedido, that.numPedido) &&
-                Objects.equals(solicitante, that.solicitante) &&
-                Objects.equals(areaSolicita, that.areaSolicita) &&
-                Objects.equals(unidadSolicita, that.unidadSolicita) &&
-                Objects.equals(fechaSolicita, that.fechaSolicita) &&
-                Objects.equals(fechaSurtido, that.fechaSurtido) &&
-                Objects.equals(fechaEnvio, that.fechaEnvio) &&
-                Objects.equals(fechaRecibido, that.fechaRecibido) &&
-                Objects.equals(estado, that.estado);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(numPedido, solicitante, areaSolicita, unidadSolicita, fechaSolicita, fechaSurtido, fechaEnvio, fechaRecibido, estado);
-    }
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     public List<ItempedidoEntity> getItempedidos() {

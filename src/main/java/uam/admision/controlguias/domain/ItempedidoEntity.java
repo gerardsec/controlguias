@@ -101,26 +101,6 @@ public class ItempedidoEntity {
         this.nombreGuiaTem = nombreGuiaTem;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ItempedidoEntity that = (ItempedidoEntity) o;
-        return Objects.equals(numPedido, that.numPedido) &&
-                Objects.equals(item, that.item) &&
-                Objects.equals(cantidad, that.cantidad) &&
-                Objects.equals(costoUnitario, that.costoUnitario) &&
-                Objects.equals(tipoGuia, that.tipoGuia) &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(idInventario, that.idInventario);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(numPedido, item, cantidad, costoUnitario, tipoGuia, id, idInventario);
-    }
-
     @ManyToOne
     @JoinColumn(name = "num_pedido", updatable = false, insertable = false)
     public PedidoEntity getPedido() {
@@ -129,6 +109,28 @@ public class ItempedidoEntity {
 
     public void setPedido(PedidoEntity pedido) {
         this.pedido = pedido;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ItempedidoEntity that = (ItempedidoEntity) o;
+        return Objects.equals(getNumPedido(), that.getNumPedido()) &&
+                Objects.equals(getItem(), that.getItem()) &&
+                Objects.equals(getCantidad(), that.getCantidad()) &&
+                Objects.equals(getCostoUnitario(), that.getCostoUnitario()) &&
+                Objects.equals(getTipoGuia(), that.getTipoGuia()) &&
+                Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getIdInventario(), that.getIdInventario()) &&
+                Objects.equals(getPedido(), that.getPedido()) &&
+                Objects.equals(getNombreGuiaTem(), that.getNombreGuiaTem());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getNumPedido(), getItem(), getCantidad(), getCostoUnitario(), getTipoGuia(), getId(), getIdInventario(), getPedido(), getNombreGuiaTem());
     }
 
     /*@ManyToOne

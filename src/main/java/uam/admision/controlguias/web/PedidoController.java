@@ -114,14 +114,40 @@ public class PedidoController {
         pedidoE.setNumPedido(numPedidoActual);
 
         logger.warn("itemes loop");
-///ERROR en esta parte....
+
         System.out.println(pedidoE.getItempedidos().toString());
         //definiendo llaves en itemspedido
         for (int i = 0; i < pedidoE.getItempedidos().size(); i++) {
             pedidoE.getItempedidos().get(i).setNumPedido(pedidoE.getNumPedido());
-            pedidoE.getItempedidos().get(i).setItem(i);
+           // pedidoE.getItempedidos().get(i).setItem(i+1);
             System.out.println(pedidoE.getItempedidos().get(i).toString());
+            System.out.println("itemes:");
+            System.out.println("num pedido--"+pedidoE.getItempedidos().get(i).getNumPedido());
+            System.out.println("num id--"+pedidoE.getItempedidos().get(i).getItem());
+            System.out.println("cantidad--"+pedidoE.getItempedidos().get(i).getCantidad());
+            System.out.println("costo uitario--"+pedidoE.getItempedidos().get(i).getCostoUnitario());
+            System.out.println("Tipo guía id--"+pedidoE.getItempedidos().get(i).getTipoGuia());
+            System.out.println("id--"+pedidoE.getItempedidos().get(i).getId());
+            System.out.println("id Inventario--"+pedidoE.getItempedidos().get(i).getIdInventario());
         }
+
+        logger.warn("-----despliega datos a insertar");
+        logger.warn("-----pedido");
+        System.out.println(pedidoE.getNumPedido().toString());
+        System.out.println(pedidoE.getSolicitante().toString());
+        System.out.println(pedidoE.getAreaSolicita().toString());
+        System.out.println(pedidoE.getUnidadSolicita().toString());
+        System.out.println(pedidoE.getFechaSolicita().toString());
+        System.out.println(pedidoE.getFechaSurtido());
+        System.out.println(pedidoE.getFechaEnvio());
+        System.out.println(pedidoE.getFechaRecibido());
+        System.out.println(pedidoE.getEstado().toString());
+
+        logger.warn("--items--");
+        System.out.println("itemes:"+pedidoE.getItempedidos().size());
+
+
+        logger.debug("-----termina despliega datos a insertar");
 
         try {
             this.repoPedido.insertData(pedidoE);
@@ -148,30 +174,26 @@ public class PedidoController {
         } else {
             logger.warn("inventario no es null");
         }
-        ItempedidoEntity itemNuevo = new ItempedidoEntity();
+       // ItempedidoEntity itemNuevo = new ItempedidoEntity();
         logger.warn("después nuevo item");
-        if (inventario.getCantidadDisponible() >= itemagregar.getCantidad()) {
-            itemNuevo.setCantidad(itemagregar.getCantidad());
-        } else {
-            itemNuevo.setCantidad(inventario.getCantidadDisponible());
+        if (inventario.getCantidadDisponible() < itemagregar.getCantidad()) {
+            itemagregar.setCantidad(inventario.getCantidadDisponible());
         }
         logger.debug("después if");
-        itemNuevo.setIdInventario(itemagregar.getIdInventario());
-        itemNuevo.setCostoUnitario(inventario.getCostoUnitario());
-        itemNuevo.setTipoGuia(inventario.getTipoGuia());
-        logger.warn("tipo guia" + inventario.getTipoGuia().toString());
+        //itemagregar.setIdInventario(itemagregar.getIdInventario());
+        itemagregar.setCostoUnitario(inventario.getCostoUnitario());
+        itemagregar.setTipoGuia(inventario.getTipoGuia());
+        itemagregar.setItem(pedidoE.getItempedidos().size()+1);
+        logger.warn("tipo guia" + itemagregar.getTipoGuia()+" item:"+itemagregar.getItem());
 
         Map<Integer, String> lTiposGuia = repoGuia.guiaTipoNombre();
-        itemNuevo.setNombreGuiaTem(lTiposGuia.get(inventario.getTipoGuia()));
-
-
-        //Integer itempedidoMayor = repoItemPedido.buscaClaveMayor();
+        itemagregar.setNombreGuiaTem(lTiposGuia.get(inventario.getTipoGuia()));
         logger.debug("antes consultar itempedido");
-        //List<ItempedidoEntity> itemstodos = repoItemPedido.listaTodo();
-        itemNuevo.setId(10);
-        itemNuevo.setIdInventario(itemagregar.getIdInventario());
+        itemagregar.setId(10);
+        //itemagregar.setIdInventario(itemagregar.getIdInventario());
 
-        pedidoE.getItempedidos().add(itemNuevo);
+
+        pedidoE.getItempedidos().add(itemagregar);
 
         return "addPedido";
     }

@@ -121,6 +121,9 @@
                         <input type="text" th:field="*{itempedidos[__${rowStat.index}__].idInventario}"/>
                     </td>
                     <td>
+                        <input type="text" th:field="*{itempedidos[__${rowStat.index}__].tipoGuia}"/>
+                    </td>
+                    <td>
                         <button type="submit" name="quitaItem"
                                 th:value="${rowStat.index}" th:text="#{itempedido.renglon.quitar}">Remove row
                         </button>
