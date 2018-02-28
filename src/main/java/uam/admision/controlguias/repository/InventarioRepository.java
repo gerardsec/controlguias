@@ -20,4 +20,8 @@ public interface InventarioRepository extends JpaRepository<InventarioEntity, In
 
     @Query("select j from InventarioEntity j where j.cantidadDisponible > 0")
     List<InventarioEntity> inventarioDisponibles();
+
+    @Query("select j from InventarioEntity j where j.id = 1")
+    InventarioEntity encuentra1();
+
 }

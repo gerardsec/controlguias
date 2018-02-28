@@ -7,7 +7,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import uam.admision.controlguias.domain.InventarioEntity;
 import uam.admision.controlguias.domain.PedidoEntity;
+import uam.admision.controlguias.repository.InventarioRepository;
 import uam.admision.controlguias.repository.PedidoRepository;
 
 import java.text.ParseException;
@@ -20,6 +22,7 @@ public class PedidoService {
 
     @Autowired
     PedidoRepository repo;
+
 
     public void insertData(PedidoEntity algo) throws ParseException {
         log.warn("> Pedido: Inserting data...");
@@ -49,22 +52,6 @@ public class PedidoService {
         return repo.pedidosPendientes();
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW, noRollbackFor = PedidoTransactionException.class)
-    public void realizaPedido(PedidoEntity pedidoEntity) throws PedidoTransactionException {
 
-        for (int i = 0; i < pedidoEntity.getItempedidos().size(); i++) {
-            pedidoEntity.getItempedidos().get(i).setNumPedido(pedidoEntity.getNumPedido());
-            pedidoEntity.getItempedidos().get(i).setItem(i + 1);}
-
-            try {
-                log.warn("insertando pedido transaction");
-                this.insertData(pedidoEntity);
-            } catch (ParseException e) {
-                log.warn("error transaction pedido");
-                e.printStackTrace();
-            }
-
-
-    }
 
 }

@@ -38,6 +38,8 @@ public class PedidoController {
     @Autowired
     private ItemPedidoService repoItemPedido;
 
+    private TransactionPedido transactionPedido;
+
     @ModelAttribute("listaTiposGuia")
     public Map<Integer, String> generaListaTiposGuia() {
         Map<Integer, String> listaTiposGuia = repoGuia.guiaTipoNombre();
@@ -103,7 +105,7 @@ public class PedidoController {
         //ejecutando transaction guardar pedido
         try {
             logger.warn("inicia pedido controller");
-            repoPedido.realizaPedido(pedidoE);
+            transactionPedido.realizaPedido(pedidoE);
         } catch (PedidoTransactionException e) {
             e.printStackTrace();
             model.addAttribute("errorMessage", "Error:" + e.getMessage());

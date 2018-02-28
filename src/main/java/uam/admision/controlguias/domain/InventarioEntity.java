@@ -19,7 +19,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "inventario", schema = "public", catalog = "controlguias")
-@DynamicUpdate
+//@DynamicUpdate
 public class InventarioEntity {
     private Integer id;
     private String claveEntrada;
