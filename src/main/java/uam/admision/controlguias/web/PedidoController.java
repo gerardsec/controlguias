@@ -39,7 +39,6 @@ public class PedidoController {
     @Autowired
     private ItemPedidoService repoItemPedido;
 
-    private TransactionPedido transactionPedido;
 
     @ModelAttribute("listaTiposGuia")
     public Map<Integer, String> generaListaTiposGuia() {
