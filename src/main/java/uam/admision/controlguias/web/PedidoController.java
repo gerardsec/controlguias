@@ -13,6 +13,7 @@ import uam.admision.controlguias.domain.InventarioEntity;
 import uam.admision.controlguias.domain.ItempedidoEntity;
 import uam.admision.controlguias.domain.PedidoEntity;
 import uam.admision.controlguias.domain.TipoguiaEntity;
+import uam.admision.controlguias.repository.InventarioRepository;
 import uam.admision.controlguias.service.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -92,6 +93,7 @@ public class PedidoController {
         //verifica que haya items en el pedido
         if (pedidoE.getItempedidos().size() == 0) {
             model.addAttribute("errorMessage", "Pedido vacío, sin artículos");
+            logger.warn("Pedido sin itemes");
             return "addPedido";
         }
 
@@ -101,11 +103,14 @@ public class PedidoController {
         Integer numPedidoActual = repoPedido.buscaClaveMayor() + 1;
         pedidoE.setNumPedido(numPedidoActual);
 
-        logger.warn("itemes loop");
+        logger.warn("Prueba");
+        Integer inventarioClave = repoInventario.buscaClaveMayor();
+        logger.warn("solicitando transaction");
         //ejecutando transaction guardar pedido
+
         try {
             logger.warn("inicia pedido controller");
-            transactionPedido.realizaPedido(pedidoE);
+            this.realizaPedido(pedidoE);
         } catch (PedidoTransactionException e) {
             e.printStackTrace();
             model.addAttribute("errorMessage", "Error:" + e.getMessage());
@@ -161,5 +166,32 @@ public class PedidoController {
         return "addPedido";
     }
 
-
+    @Transactional(propagation = Propagation.REQUIRES_NEW, noRollbackFor = PedidoTransactionException.class)
+    public void realizaPedido(PedidoEntity pedidoEntity) throws PedidoTransactionException {
+        logger.warn("Entrando a transaction");
+        Integer pedidoClave = repoPedido.buscaClaveMayor();
+        InventarioEntity inventario;
+        for (int i = 0; i < pedidoEntity.getItempedidos().size(); i++) {
+            logger.warn("realizaPedido primer for:" + i);
+            pedidoEntity.getItempedidos().get(i).setNumPedido(pedidoEntity.getNumPedido());
+            pedidoEntity.getItempedidos().get(i).setItem(i + 1);
+        }
+        try {
+            for (int i = 0; i < pedidoEntity.getItempedidos().size(); i++) {
+                logger.warn("buscando inventario con inv=" + pedidoEntity.getItempedidos().get(i).getIdInventario());
+                inventario = repoInventario.buscaPorId(pedidoEntity.getItempedidos().get(i).getIdInventario());
+                logger.warn("Fin prueba pedido");
+                logger.warn("inventario encontrado con tipo guía:" + inventario.getTipoGuia() + " disponible:" + inventario.getCantidadDisponible());
+                Integer disponibleFinal = inventario.getCantidadDisponible() - pedidoEntity.getItempedidos().get(i).getCantidad();
+                logger.warn("antes guardar inventario. disponible final:" + disponibleFinal);
+                inventario.setCantidadDisponible(disponibleFinal);
+                //repoInventario.save(inventario); el update se hace automáticamente.
+            }
+            logger.warn("insertando pedido transaction");
+            repoPedido.insertData(pedidoEntity);
+        } catch (ParseException e) {
+            logger.warn("error parse pedido");
+        }
+        logger.warn("Saliendo transaction");
+    }
 }
